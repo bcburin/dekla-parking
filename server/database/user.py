@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Any
 
 from sqlalchemy.orm import Session
@@ -20,7 +19,7 @@ class UserCRUD(BaseCRUD[User, UserCreate, UserUpdate]):
     def get_by_email(self, email: str) -> User | None:
         return self.get_by_id(email, 'email')
 
-    def create(self, user: UserCreate) -> User:
+    def create(self, *, user: UserCreate, refresh: bool = True) -> User:
         password_hash = get_password_hash(user.password)
         user_data = {
             **user.dict(),
@@ -30,7 +29,8 @@ class UserCRUD(BaseCRUD[User, UserCreate, UserUpdate]):
         db_user = User(**user_data)
         self.db.add(db_user)
         self.db.commit()
-        self.db.refresh(db_user)
+        if refresh:
+            self.db.refresh(db_user)
         return db_user
 
     def update(self, db_user: User, user: UserUpdate | dict[str, Any]) -> User:
