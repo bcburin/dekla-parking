@@ -71,6 +71,8 @@ class BaseCRUD(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def remove(self, *, pk: Any) -> ModelType:
         obj = self.db.query(self.model).get(pk)
+        if not obj:
+            return None
         self.db.delete(obj)
         self.db.commit()
         return obj

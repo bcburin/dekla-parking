@@ -102,7 +102,10 @@ def update_user(user_id: int, user: UserUpdate, db=Depends(DeklaParkingDb.get_db
 @router.delete(
     path='/{user_id}',
     response_model=UserOut,
+    responses={404: {'detail': 'No such user'}}
 )
 def delete_user(user_id: int, db=Depends(DeklaParkingDb.get_db)):
     deleted_user = UserCRUD(db).remove(pk=user_id)
+    if not deleted_user:
+        raise HTTPException(status_code=404, detail='No such user.')
     return deleted_user
