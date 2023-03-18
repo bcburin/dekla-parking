@@ -85,7 +85,7 @@ def update_user(user_id: int, user: UserUpdate, db=Depends(DeklaParkingDb.get_db
     if not user:
         raise HTTPException(status_code=400, detail='No updates provided.')
     db_user = UserCRUD(db).get_by_id(user_id)
-    if not user:
+    if not db_user:
         raise HTTPException(status_code=404, detail='No such user.')
     updated_user = UserCRUD(db).update(db_user=db_user, user=user)
     return updated_user
