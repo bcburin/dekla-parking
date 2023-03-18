@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError
 
 from server.database.config import DeklaParkingDb
 from server.database.user import UserCRUD
@@ -44,7 +45,7 @@ def get_user_by_id(user_id: int, db=Depends(DeklaParkingDb.get_db)):
 
 
 @router.get(
-    path='/query',
+    path='/find',
     response_model=UserOut,
     responses={
         404: {'detail': 'No such user.'},
@@ -67,10 +68,14 @@ def get_user_by_index(username: str | None = None, email: str | None = None, db=
 @router.post(
     path='/',
     response_model=UserOut,
+    responses={400: {'detail': 'DB error string'}}
 )
 def create_user(user: UserCreate, db=Depends(DeklaParkingDb.get_db)):
-    created_user = UserCRUD(db).create(user=user)
-    return created_user
+    try:
+        created_user = UserCRUD(db).create(user=user)
+        return created_user
+    except IntegrityError as dbe:
+        raise HTTPException(status_code=400, detail=dbe.orig.args)
 
 
 @router.put(
