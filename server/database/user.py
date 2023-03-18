@@ -38,16 +38,14 @@ class UserCRUD(BaseCRUD[User, UserCreate, UserUpdate]):
             update_data = user
         else:
             update_data = user.dict(exclude_unset=True)
-        if 'password' in update_data:
-            password_hash = get_password_hash(update_data['password'])
-            update_data['password_hash'] = password_hash
-            del update_data['password']
+        if 'password_new' in update_data:
+            password_new_hash = get_password_hash(update_data['password_new'])
+            update_data['password_hash'] = password_new_hash
+            del update_data['password_new']
         return super().update(db_obj=db_user, obj=update_data)
 
-    def authenticate(self, email: str, password: str) -> User | None:
-        user = self.get_by_email(email)
-        if not user:
-            return None
-        if not verify_password(password, user.password_hash):
-            return None
-        return user
+    def authenticate(self, id: int, password: str) -> tuple[User | None, bool]:
+        user = self.get_by_id(id)
+        if not user or not verify_password(password, user.password_hash):
+            return None, False
+        return user, True

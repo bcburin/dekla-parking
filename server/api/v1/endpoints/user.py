@@ -83,15 +83,18 @@ def create_user(user: UserCreate, db=Depends(DeklaParkingDb.get_db)):
     response_model=UserOut,
     responses={
         404: {'detail': 'No such user.'},
+        401: {'detail': 'Password authentication is required.'},
         400: {'detail': 'No updates provided.'}
     },
 )
 def update_user(user_id: int, user: UserUpdate, db=Depends(DeklaParkingDb.get_db)):
-    if not user:
-        raise HTTPException(status_code=400, detail='No updates provided.')
-    db_user = UserCRUD(db).get_by_id(user_id)
+    db_user, authenticated = UserCRUD(db).authenticate(id=user_id, password=user.password)
+    if not authenticated:
+        raise HTTPException(status_code=401, detail='Password authentication failed.')
     if not db_user:
         raise HTTPException(status_code=404, detail='No such user.')
+    if not user.has_updates():
+        raise HTTPException(status_code=400, detail='No updates provided.')
     updated_user = UserCRUD(db).update(db_user=db_user, user=user)
     return updated_user
 

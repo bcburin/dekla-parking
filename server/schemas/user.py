@@ -13,7 +13,11 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
-    password: str | None = None
+    password: str
+    password_new: str | None = None
+
+    def has_updates(self) -> bool:
+        return bool(self.username) or bool(self.email) or bool(self.password_new)
 
 
 class UserOut(UserBase):
