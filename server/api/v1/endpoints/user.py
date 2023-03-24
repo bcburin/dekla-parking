@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi_restful.cbv import cbv
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
 
-from server.database.config import DeklaParkingDb
+from server.database.config import get_db
 from server.database.user import UserCRUD
 from server.schemas.user import UserOut, UserCreate, UserUpdate
 
@@ -11,7 +11,7 @@ router = APIRouter(prefix='/users', tags=['users'])
 
 @cbv(router)
 class UserCBV:
-    db = Depends(DeklaParkingDb.get_db)
+    db = Depends(get_db)
 
     @router.get(path='/', response_model=list[UserOut])
     def get_all_users(self, skip: int = Query(default=0, ge=0), limit: int | None = Query(default=100, ge=0)):

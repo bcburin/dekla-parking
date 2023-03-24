@@ -1,34 +1,38 @@
+from functools import lru_cache
 from os import getenv
+from typing import Iterator
 
-from sqlalchemy import create_engine
+from fastapi_restful.session import FastAPISessionMaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-
-class DeklaParkingDb:
-    NAME = 'dekla'
-    USER = getenv('DB_USER')
-    HOST = getenv('DB_HOST')
-    PASSWORD = getenv('DB_PASSWORD')
-    PORT = 5432
-
-    SQLALCHEMY_URL = f'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}'
-
-    ENGINE = create_engine(SQLALCHEMY_URL)
-
-    Session = sessionmaker(
-        autocommit=False,
-        autoflush=False,
-       bind=ENGINE
-    )
-
-    @staticmethod
-    def get_db() -> Session:
-        db = DeklaParkingDb.Session()
-        try:
-            yield db
-        finally:
-            db.close()
+from sqlalchemy.orm import Session
 
 
 Base = declarative_base()
+
+
+class DBConfig:
+    DEFAULT_NAME = 'dekla'
+    DEFAULT_DBMS = 'postgresql'
+    DEFAULT_HOST = 'localhost'
+    DEFAULT_PORT = '5432'
+
+    def __init__(self):
+        self.dbms = getenv('DB_DBMS') or self.DEFAULT_DBMS
+        self.host = getenv('DB_HOST') or self.DEFAULT_HOST
+        self.port = getenv('DB_PORT') or self.DEFAULT_PORT
+        self.name = getenv('DB_NAME') or self.DEFAULT_NAME
+        self.user = getenv('DB_USER')
+        self.password = getenv('DB_PASSWORD')
+
+    def get_uri(self):
+        return f'{self.dbms}://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}'
+
+
+def get_db() -> Iterator[Session]:
+    yield from _get_fastapi_sessionmaker().get_db()
+
+
+@lru_cache()
+def _get_fastapi_sessionmaker() -> FastAPISessionMaker:
+    database_uri = DBConfig().get_uri()
+    return FastAPISessionMaker(database_uri)
