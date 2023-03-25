@@ -24,15 +24,16 @@ class UserCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return user
 
-    @router.get(path='/find', response_model=UserOut)
-    def get_user_by_index(self, username: str | None = None, email: str | None = None):
-        if not username and not email:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='A username or email must be specified.')
-        user = None
-        if username:
-            user = UserCRUD(self.db).get_by_username(username)
-        elif email:
-            user = UserCRUD(self.db).get_by_email(email)
+    @router.get(path='/email/{email}', response_model=UserOut)
+    def get_user_by_email(self, email: str):
+        user = UserCRUD(self.db).get_by_email(email=email)
+        if not user:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
+        return user
+
+    @router.get(path='/username/{username}', response_model=UserOut)
+    def get_user_by_username(self, username: str):
+        user = UserCRUD(self.db).get_by_username(username=username)
         if not user:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return user
