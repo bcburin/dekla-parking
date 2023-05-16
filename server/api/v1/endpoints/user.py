@@ -1,21 +1,39 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_restful.cbv import cbv
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
+from sqlalchemy.orm import Session
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from server.database.config import get_db
 from server.database.user import UserCRUD
 from server.schemas.user import UserOut, UserCreate, UserUpdate
+from server.utils.security import create_access_token, authenticate_user, get_current_user
 
 router = APIRouter(prefix='/users', tags=['users'])
 
 
+@router.post(path='/token')
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db=Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Incorrect username or password.')
+    access_token = create_access_token(data={'sub': user.username})
+    return {'access_token': access_token, 'token_type': 'bearer'}
+
+
 @cbv(router)
 class UserCBV:
-    db = Depends(get_db)
+    db: Session = Depends(get_db)
 
     @router.get(path='/', response_model=list[UserOut])
     def get_all_users(self, skip: int = Query(default=0, ge=0), limit: int | None = Query(default=100, ge=0)):
         return UserCRUD(self.db).get_all(skip=skip, limit=limit)
+
+    @router.get(path='/me', response_model=UserOut)
+    def get_user_me(self, current_user: Annotated[UserOut, Depends(get_current_user)]):
+        return current_user
 
     @router.get(path='/{user_id}', response_model=UserOut)
     def get_user_by_id(self, user_id: int):
@@ -38,6 +56,10 @@ class UserCBV:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         return user
 
+    # @router.get(path='/me', response_model=UserOut)
+    # def get_user_me(self, current_user: Annotated[UserOut, Depends(get_current_user)]):
+    #     return current_user
+
     @router.post(path='/', response_model=UserOut)
     def create_user(self, user: UserCreate):
         user_db = UserCRUD(self.db).get_by_username(username=user.username)
@@ -48,9 +70,7 @@ class UserCBV:
 
     @router.put(path='/{user_id}', response_model=UserOut)
     def update_user(self, user_id: int, user: UserUpdate):
-        db_user, authenticated = UserCRUD(self.db).authenticate(id=user_id, password=user.password)
-        if not authenticated:
-            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail='Password authentication failed.')
+        db_user = UserCRUD(self.db).get_by_id(user_id)
         if not db_user:
             raise HTTPException(status_code=HTTP_404_NOT_FOUND)
         if not user.has_updates():

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from server.models.user import User
 from server.schemas.user import UserCreate, UserUpdate
-from server.services.security import get_password_hash, verify_password
+import server.utils.security as sec
 from server.database.basecrud import BaseCRUD
 
 
@@ -20,7 +20,7 @@ class UserCRUD(BaseCRUD[User, UserCreate, UserUpdate]):
         return self.get_by_id(email, 'email')
 
     def create(self, *, user: UserCreate, refresh: bool = True) -> User:
-        password_hash = get_password_hash(user.password)
+        password_hash = sec.get_password_hash(user.password)
         user_data = {
             **user.dict(),
             'password_hash': password_hash,
@@ -39,13 +39,7 @@ class UserCRUD(BaseCRUD[User, UserCreate, UserUpdate]):
         else:
             update_data = user.dict(exclude_unset=True)
         if 'password_new' in update_data:
-            password_new_hash = get_password_hash(update_data['password_new'])
+            password_new_hash = sec.get_password_hash(update_data['password_new'])
             update_data['password_hash'] = password_new_hash
             del update_data['password_new']
         return super().update(db_obj=db_user, obj=update_data)
-
-    def authenticate(self, id: int, password: str) -> tuple[User | None, bool]:
-        user = self.get_by_id(id)
-        if not user or not verify_password(password, user.password_hash):
-            return None, False
-        return user, True
