@@ -2,9 +2,9 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from server.models.user import User
-from server.schemas.user import UserCreate, UserUpdate
-import server.utils.security as sec
+from server.common.models.user import User
+from server.common.schemas.user import UserCreate, UserUpdate
+import server.common.utils.security as sec
 from server.database.basecrud import BaseCRUD
 
 

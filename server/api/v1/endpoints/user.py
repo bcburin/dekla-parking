@@ -8,8 +8,8 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
 from server.database.config import get_db
 from server.database.user import UserCRUD
-from server.schemas.user import UserOut, UserCreate, UserUpdate
-from server.utils.security import create_access_token, authenticate_user, get_current_user
+from server.common.schemas.user import UserOut, UserCreate, UserUpdate
+from server.common.utils.security import create_access_token, authenticate_user, get_current_user
 
 router = APIRouter(prefix='/users', tags=['users'])
 
