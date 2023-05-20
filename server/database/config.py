@@ -3,11 +3,11 @@ from os import getenv
 from typing import Iterator
 
 from fastapi_restful.session import FastAPISessionMaker
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, DeclarativeBase
 
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 class DBConfig:

@@ -1,12 +1,26 @@
-from sqlalchemy import Column, String, BigInteger
+from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
 
+if TYPE_CHECKING:
+    from server.common.models.label import LabelModel
+    from server.common.models.labeling import LabelingModel
 
-class User(Base):
-    __tablename__ = 'users'
 
-    id = Column(BigInteger, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    password_hash = Column(String)
+class UserModel(Base):
+    __tablename__ = 'user'
+
+    # Fields
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(unique=True, index=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column()
+    is_admin: Mapped[bool] = mapped_column()
+
+    # Relationships
+    user_labels: Mapped[list['LabelModel']] = relationship(secondary='labeling', back_populates='label_users')
+    user_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeled_user')
+
+
