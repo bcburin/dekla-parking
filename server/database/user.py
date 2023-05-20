@@ -3,26 +3,26 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from server.common.models.user import UserModel
-from server.common.schemas.user import UserCreate, UserUpdate
-import server.common.utils.security as sec
-from server.database.basecrud import BaseCRUD
+from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
+import server.common.utils.authentication as auth
+from server.database.basebdmanager import BaseBdManager
 
 
-class UserCRUD(BaseCRUD[UserModel, UserCreate, UserUpdate]):
+class UserDbManager(BaseBdManager[UserModel, UserCreateSchema, UserUpdateSchema]):
 
     def __init__(self, db: Session):
-        super().__init__(UserModel, db)
+        super().__init__(model=UserModel, db=db)
 
     def get_by_username(self, username: str) -> UserModel | None:
-        return self.get_by_id(username, 'username')
+        return self.get_by_unique_attribute(username, 'username')
 
     def get_by_email(self, email: str) -> UserModel | None:
-        return self.get_by_id(email, 'email')
+        return self.get_by_unique_attribute(email, 'email')
 
-    def create(self, *, user: UserCreate, refresh: bool = True) -> UserModel:
-        password_hash = sec.get_password_hash(user.password)
+    def create(self, *, obj: UserCreateSchema, refresh: bool = True) -> UserModel:
+        password_hash = auth.get_password_hash(obj.password)
         user_data = {
-            **user.dict(),
+            **obj.dict(),
             'password_hash': password_hash,
         }
         del user_data['password']
@@ -33,13 +33,13 @@ class UserCRUD(BaseCRUD[UserModel, UserCreate, UserUpdate]):
             self.db.refresh(db_user)
         return db_user
 
-    def update(self, db_user: UserModel, user: UserUpdate | dict[str, Any]) -> UserModel:
-        if isinstance(user, dict):
-            update_data = user
+    def update(self, db_obj: UserModel, obj: UserUpdateSchema | dict[str, Any]) -> UserModel:
+        if isinstance(obj, dict):
+            update_data = obj
         else:
-            update_data = user.dict(exclude_unset=True)
+            update_data = obj.dict(exclude_unset=True)
         if 'password_new' in update_data:
-            password_new_hash = sec.get_password_hash(update_data['password_new'])
+            password_new_hash = auth.get_password_hash(update_data['password_new'])
             update_data['password_hash'] = password_new_hash
             del update_data['password_new']
-        return super().update(db_obj=db_user, obj=update_data)
+        return super().update(db_obj=db_obj, obj=update_data)

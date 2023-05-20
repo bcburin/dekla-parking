@@ -1,26 +1,30 @@
 from pydantic import BaseModel, EmailStr
 
-
-class UserBase(BaseModel):
-    username: str | None = None
-    email: EmailStr | None = None
+from server.common.schemas.label import LabelOutSchema
 
 
-class UserCreate(UserBase):
+class UserBaseSchema(BaseModel):
     username: str
     email: EmailStr
+    is_admin: bool
+
+
+class UserCreateSchema(UserBaseSchema):
     password: str
 
 
-class UserUpdate(UserBase):
-    password: str
+class UserUpdateSchema(UserBaseSchema):
+    username: str | None
+    email: EmailStr | None
+    is_admin: bool | None
+    password_old: str
     password_new: str | None = None
 
     def has_updates(self) -> bool:
-        return bool(self.username) or bool(self.email) or bool(self.password_new)
+        return bool(self.username) or bool(self.email) or bool(self.password_new) or bool(self.is_admin)
 
 
-class UserOut(UserBase):
+class UserOutSchema(UserBaseSchema):
     id: int
 
     class Config:

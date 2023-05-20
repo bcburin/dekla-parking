@@ -2,22 +2,14 @@ from argparse import ArgumentParser, Namespace
 from os import environ
 
 import uvicorn
-from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from sqlalchemy import create_engine
 
-from server.api import v1
+from server.api.api import api
 from server.database.config import Base, DBConfig
 
-server = FastAPI(
-    title='Dekla Parking API',
-    version='1.0.0'
-)
 
-server.include_router(v1.router)
-
-
-@server.get('/')
+@api.get('/')
 async def root():
     return RedirectResponse(url='/docs')
 
@@ -56,4 +48,4 @@ if __name__ == '__main__':
     # Create database and tables if they do not exist yet
     Base.metadata.create_all(create_engine(DBConfig().get_uri()))
     # Run server
-    uvicorn.run("app:server", host=arguments.host, port=int(arguments.port), reload=arguments.dev_mode)
+    uvicorn.run("app:api", host=arguments.host, port=int(arguments.port), reload=arguments.dev_mode)

@@ -4,83 +4,77 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
+from starlette.status import HTTP_400_BAD_REQUEST
 
+from server.common.schemas.label import LabelOutSchema
+from server.common.schemas.labeling import LabelingCreateForUserSchema, LabelingOutSchema, \
+    LabelingRequestType
 from server.database.config import get_db
-from server.database.user import UserCRUD
-from server.common.schemas.user import UserOut, UserCreate, UserUpdate
-from server.common.utils.security import create_access_token, authenticate_user, get_current_user
+from server.common.schemas.user import UserOutSchema, UserCreateSchema, UserUpdateSchema
+from server.common.utils.authentication import create_access_token, authenticate_user, get_current_user
+from server.services.user import UserService
 
 router = APIRouter(prefix='/users', tags=['users'])
 
 
-@router.post(path='/token')
-async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db=Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Incorrect username or password.')
-    access_token = create_access_token(data={'sub': user.username})
-    return {'access_token': access_token, 'token_type': 'bearer'}
-
-
 @cbv(router)
-class UserCBV:
+class UserAPI:
     db: Session = Depends(get_db)
 
-    @router.get(path='/', response_model=list[UserOut])
-    def get_all_users(self, skip: int = Query(default=0, ge=0), limit: int | None = Query(default=100, ge=0)):
-        return UserCRUD(self.db).get_all(skip=skip, limit=limit)
+    @router.post(path='/login')
+    async def login(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+        user = authenticate_user(self.db, form_data.username, form_data.password)
+        if not user:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Incorrect username or password.')
+        access_token = create_access_token(data={'sub': user.username})
+        return {'access_token': access_token, 'token_type': 'bearer'}
 
-    @router.get(path='/me', response_model=UserOut)
-    def get_user_me(self, current_user: Annotated[UserOut, Depends(get_current_user)]):
+    @router.get(path='/', response_model=list[UserOutSchema])
+    def get_all_users(self, skip: int = Query(default=0, ge=0), limit: int | None = Query(default=100, ge=0)):
+        return UserService(self.db).get_all(skip=skip, limit=limit)
+
+    @router.get(path='/me', response_model=UserOutSchema)
+    def get_user_me(self, current_user: Annotated[UserOutSchema, Depends(get_current_user)]):
         return current_user
 
-    @router.get(path='/{user_id}', response_model=UserOut)
+    @router.get(path='/{user_id}', response_model=UserOutSchema)
     def get_user_by_id(self, user_id: int):
-        user = UserCRUD(self.db).get_by_id(user_id)
-        if not user:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return user
+        return UserService(self.db).get_by_id(user_id)
 
-    @router.get(path='/email/{email}', response_model=UserOut)
+    @router.get(path='/emails/{email}', response_model=UserOutSchema)
     def get_user_by_email(self, email: str):
-        user = UserCRUD(self.db).get_by_email(email=email)
-        if not user:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return user
+        return UserService(self.db).get_by_email(email=email)
 
-    @router.get(path='/username/{username}', response_model=UserOut)
+    @router.get(path='/usernames/{username}', response_model=UserOutSchema)
     def get_user_by_username(self, username: str):
-        user = UserCRUD(self.db).get_by_username(username=username)
-        if not user:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return user
+        return UserService(self.db).get_by_username(username=username)
 
-    # @router.get(path='/me', response_model=UserOut)
-    # def get_user_me(self, current_user: Annotated[UserOut, Depends(get_current_user)]):
-    #     return current_user
+    @router.post(path='/', response_model=UserOutSchema)
+    def create_user(self, user: UserCreateSchema):
+        return UserService(self.db).create(obj=user)
 
-    @router.post(path='/', response_model=UserOut)
-    def create_user(self, user: UserCreate):
-        user_db = UserCRUD(self.db).get_by_username(username=user.username)
-        if user_db:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=f'{user_db.username} already exists')
-        created_user = UserCRUD(self.db).create(user=user)
-        return created_user
+    @router.put(path='/{user_id}', response_model=UserOutSchema)
+    def update_user(self, user_id: int, user: UserUpdateSchema):
+        return UserService(self.db).update(id=user_id, obj=user)
 
-    @router.put(path='/{user_id}', response_model=UserOut)
-    def update_user(self, user_id: int, user: UserUpdate):
-        db_user = UserCRUD(self.db).get_by_id(user_id)
-        if not db_user:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        if not user.has_updates():
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='No updates provided.')
-        updated_user = UserCRUD(self.db).update(db_user=db_user, user=user)
-        return updated_user
-
-    @router.delete(path='/{user_id}', response_model=UserOut)
+    @router.delete(path='/{user_id}', response_model=UserOutSchema)
     def delete_user(self, user_id: int):
-        deleted_user = UserCRUD(self.db).remove(pk=user_id)
-        if not deleted_user:
-            raise HTTPException(status_code=HTTP_404_NOT_FOUND)
-        return deleted_user
+        return UserService(self.db).delete(id=user_id)
+
+    @router.post(path='/{user_id}/labelings', response_model=list[LabelingOutSchema])
+    def add_labeling_to_user(self, user_id: int, user_labelings: list[LabelingCreateForUserSchema]):
+        UserService(self.db).add_labelings_to_user(user_id=user_id, user_labelings=user_labelings)
+        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=LabelingRequestType.all)
+
+    @router.delete(path='/{user_id}/labelings', response_model=list[LabelingOutSchema])
+    def remove_labeling_from_user(self, user_id: int, label_ids: list[int]):
+        UserService(self.db).remove_labelings_from_user(user_id=user_id, labeling_ids=label_ids)
+        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=LabelingRequestType.all)
+
+    @router.get('/{user_id}/labelings', response_model=list[LabelingOutSchema])
+    def get_user_labelings(self, user_id: int, labeling_type: LabelingRequestType | None = None):
+        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=labeling_type)
+
+    @router.get('/{user_id}/labels', response_model=list[LabelOutSchema])
+    def get_user_active_labels(self, user_id: int):
+        return UserService(self.db).get_active_user_labels(user_id)

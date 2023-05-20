@@ -13,7 +13,7 @@ from server.database.config import get_db
 import server.database.user as dbu
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="v1/users/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="v1/users/login")
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -46,7 +46,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 def authenticate_user(db: Session, username: str, password: str):
-    user = dbu.UserCRUD(db).get_by_username(username=username)
+    user = dbu.UserDbManager(db).get_by_username(username=username)
     if not user or not verify_password(password, user.password_hash):
         return False
     return user
@@ -65,7 +65,7 @@ def get_current_user(db: Annotated[Session, Depends(get_db)], token: Annotated[s
             raise credentials_exception
     except (JWTError, ValidationError):
         raise credentials_exception
-    user = dbu.UserCRUD(db).get_by_username(username=username)
+    user = dbu.UserDbManager(db).get_by_username(username=username)
     if user is None:
         raise credentials_exception
     return user

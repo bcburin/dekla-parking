@@ -20,7 +20,8 @@ class UserModel(Base):
     is_admin: Mapped[bool] = mapped_column()
 
     # Relationships
-    user_labels: Mapped[list['LabelModel']] = relationship(secondary='labeling', back_populates='label_users')
-    user_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeled_user')
+    user_labels: Mapped[list['LabelModel']] = relationship(
+        secondary='labeling', back_populates='label_users', viewonly=True)
+    user_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeled_user', viewonly=True)
 
 

@@ -10,14 +10,15 @@ if TYPE_CHECKING:
 
 
 class LabelModel(Base):
-    __table_name__ = 'label'
+    __tablename__ = 'label'
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column()
+    name: Mapped[str] = mapped_column(unique=True)
     description: Mapped[str] = mapped_column()
     priority: Mapped[int] = mapped_column()
 
     # Relationships
-    label_users: Mapped[list['UserModel']] = relationship(secondary='labeling', back_populates='user_labels')
-    label_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeling_label')
+    label_users: Mapped[list['UserModel']] = relationship(
+        secondary='labeling', back_populates='user_labels', viewonly=True)
+    label_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeling_label', viewonly=True)

@@ -2,6 +2,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
 from server.database.config import Base
@@ -11,12 +12,15 @@ CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
-class BaseCRUD(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
-    def __init__(self, model: Type[ModelType], db: Session):
+class BaseBdManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+    def __init__(self, *, db: Session, model: Type[ModelType] | None = None):
         self.model = model
         self.db = db
 
-    def get_by_id(
+    def get_by_id(self, id_value) -> Optional[ModelType]:
+        return self.db.query(self.model).get(id_value)
+
+    def get_by_unique_attribute(
             self,
             id_value: Any,
             id_name: str = 'id'
@@ -69,10 +73,20 @@ class BaseCRUD(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.db.refresh(db_obj)
         return db_obj
 
-    def remove(self, *, pk: Any) -> ModelType:
+    def remove(self, *, pk: Any) -> ModelType | None:
         obj = self.db.query(self.model).get(pk)
         if not obj:
             return None
         self.db.delete(obj)
         self.db.commit()
         return obj
+
+    def get_unique_attributes_names(self):
+        inspector = inspect(self.model)
+        unique_attributes = set()
+
+        for constraint in inspector.get_unique_constraints():
+            columns = constraint['column_names']
+            unique_attributes.update(columns)
+
+        return unique_attributes
