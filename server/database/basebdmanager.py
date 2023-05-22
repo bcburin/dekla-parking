@@ -2,7 +2,6 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
 from server.database.config import Base
@@ -80,13 +79,3 @@ class BaseBdManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.db.delete(obj)
         self.db.commit()
         return obj
-
-    def get_unique_attributes_names(self):
-        inspector = inspect(self.model)
-        unique_attributes = set()
-
-        for constraint in inspector.get_unique_constraints():
-            columns = constraint['column_names']
-            unique_attributes.update(columns)
-
-        return unique_attributes
