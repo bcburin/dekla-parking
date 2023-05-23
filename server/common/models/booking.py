@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
@@ -15,8 +16,8 @@ class BookingModel(Base):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_user_id: Mapped[int] = mapped_column()
-    fk_lot_id: Mapped[int] = mapped_column()
+    fk_user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    fk_lot_id: Mapped[int] = mapped_column(ForeignKey('lot.id'))
     book_time: Mapped[str] = mapped_column()
     status: Mapped[str] = mapped_column()
     start_time: Mapped[datetime] = mapped_column()
@@ -24,5 +25,5 @@ class BookingModel(Base):
 
     # Relationships
     booking_user: Mapped['UserModel'] = relationship(
-        back_populates='user_booking', viewonly=True)
-    booking_lot: Mapped['LotModel'] = relationship(back_populates='lot_booking', viewonly=True)
+        back_populates='user_bookings', viewonly=True)
+    booking_lot: Mapped['LotModel'] = relationship(back_populates='lot_bookings', viewonly=True)
