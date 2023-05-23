@@ -1,9 +1,9 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
-from datetime import datetime
 
 if TYPE_CHECKING:
     from server.common.models.lot import LotModel
@@ -23,6 +23,6 @@ class BookingModel(Base):
     end_time: Mapped[datetime] = mapped_column()
 
     # Relationships
-    booking_users: Mapped['UserModel'] = relationship(
+    booking_user: Mapped['UserModel'] = relationship(
         back_populates='user_booking', viewonly=True)
     booking_lot: Mapped['LotModel'] = relationship(back_populates='lot_booking', viewonly=True)

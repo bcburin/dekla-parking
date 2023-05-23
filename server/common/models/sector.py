@@ -15,8 +15,8 @@ class SectorModel(Base):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_PublicPolicy_id: Mapped[int] = mapped_column()
-    fk_ExclusivePolicy_id: Mapped[int] = mapped_column()
+    fk_pp_id: Mapped[int] = mapped_column()
+    fk_ep_id: Mapped[int] = mapped_column()
     name: Mapped[str] = mapped_column()
     available: Mapped[bool] = mapped_column()
 
@@ -25,4 +25,4 @@ class SectorModel(Base):
         back_populates='public_policy_sector', viewonly=True)
     sector_exclusive_policy: Mapped['ExclusivePolicyModel'] = relationship(
         back_populates='exclusive_policy_sector', viewonly=True)
-    sector_lot: Mapped[list['LotModel']] = relationship(back_populates='lot_sector', viewonly=True)
+    sector_lots: Mapped[list['LotModel']] = relationship(back_populates='lot_sector', viewonly=True)

@@ -24,6 +24,6 @@ class LabelModel(Base):
     label_users: Mapped[list['UserModel']] = relationship(
         secondary='labeling', back_populates='user_labels', viewonly=True)
     label_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeling_label', viewonly=True)
-    label_ep_permission: Mapped[list['EpPermissionModel']] = relationship(back_populates='ep_permission_label',viewonly=True)
-    label_exclusive_policy: Mapped[list['ExclusivePolicyModel']] = relationship(
+    label_ep_permissions: Mapped[list['EpPermissionModel']] = relationship(back_populates='ep_permission_label',viewonly=True)
+    label_exclusive_policies: Mapped[list['ExclusivePolicyModel']] = relationship(
         secondary='ep_permission', back_populates='exclusive_policy_label', viewonly=True)

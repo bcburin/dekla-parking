@@ -1,9 +1,9 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
-from datetime import datetime
 
 if TYPE_CHECKING:
     from server.common.models.exclusive_policy import ExclusivePolicyModel
