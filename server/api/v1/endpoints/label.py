@@ -23,7 +23,7 @@ class LabelAPI:
 
     @router.get(path='/names/{name}', response_model=LabelOutSchema)
     def get_label_by_name(self, name: str):
-        return LabelService(self.db).get_by_name(name=name)
+        return LabelService(self.db).get_by_unique_attribute(name, 'name')
 
     @router.post(path='/', response_model=LabelOutSchema)
     def create_label(self, label: LabelCreateSchema):

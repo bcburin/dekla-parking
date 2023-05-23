@@ -6,6 +6,7 @@ from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_400_BAD_REQUEST
 
+from server.common.schemas.booking import BookingOutSchema
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.labeling import LabelingCreateForUserSchema, LabelingOutSchema, \
     LabelingRequestType
@@ -43,11 +44,11 @@ class UserAPI:
 
     @router.get(path='/emails/{email}', response_model=UserOutSchema)
     def get_user_by_email(self, email: str):
-        return UserService(self.db).get_by_email(email=email)
+        return UserService(self.db).get_by_unique_attribute(email, 'email')
 
     @router.get(path='/usernames/{username}', response_model=UserOutSchema)
     def get_user_by_username(self, username: str):
-        return UserService(self.db).get_by_username(username=username)
+        return UserService(self.db).get_by_unique_attribute(username, 'username')
 
     @router.post(path='/', response_model=UserOutSchema)
     def create_user(self, user: UserCreateSchema):
@@ -78,3 +79,7 @@ class UserAPI:
     @router.get('/{user_id}/labels', response_model=list[LabelOutSchema])
     def get_user_active_labels(self, user_id: int):
         return UserService(self.db).get_active_user_labels(user_id)
+
+    @router.get('{user_id}/bookings', response_model=list[BookingOutSchema])
+    def get_user_bookings(self, user_id: int):
+        return UserService(self).get_user_bookings(user_id)

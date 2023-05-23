@@ -11,7 +11,7 @@ CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
-class BaseBdManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+class BaseDbManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, *, db: Session, model: Type[ModelType] | None = None):
         self.model = model
         self.db = db

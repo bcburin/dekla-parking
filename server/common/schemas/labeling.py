@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.user import UserOutSchema
+from server.common.utils.classes import NonNullAttributeVerifier
 
 
 class LabelingBaseSchema(BaseModel):
@@ -22,7 +23,7 @@ class LabelingCreateSchema(LabelingBaseSchema):
     fk_label_id: int
 
 
-class LabelingUpdateSchema(LabelingBaseSchema):
+class LabelingUpdateSchema(LabelingBaseSchema, NonNullAttributeVerifier):
     pass
 
 

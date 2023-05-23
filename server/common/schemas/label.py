@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from server.common.utils.classes import NonNullAttributeVerifier
+
 
 class LabelBaseSchema(BaseModel):
     name: str
@@ -11,13 +13,10 @@ class LabelCreateSchema(LabelBaseSchema):
     pass
 
 
-class LabelUpdateSchema(LabelBaseSchema):
+class LabelUpdateSchema(LabelBaseSchema, NonNullAttributeVerifier):
     name: str | None
     description: str | None
     priority: int | None
-
-    def has_updates(self):
-        return any(value is not None for value in self.__dict__.values() if value is not None)
 
 
 class LabelOutSchema(LabelBaseSchema):

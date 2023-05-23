@@ -3,12 +3,12 @@ from typing import Type, Any, Generic
 from sqlalchemy.orm import Session
 
 from server.common.exceptions.db import NotFoundDbException, NoUpdatesProvidedDbException
-from server.database.basebdmanager import BaseBdManager, ModelType, CreateSchemaType, UpdateSchemaType
+from server.database.basedbmanager import BaseDbManager, ModelType, CreateSchemaType, UpdateSchemaType
 
 
 class BasicDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
-    def __init__(self, *, db: Session, db_manager: Type[BaseBdManager]):
+    def __init__(self, *, db: Session, db_manager: Type[BaseDbManager]):
         self.db_manager = db_manager(db=db)
 
     def get_all(self, skip: int = 0, limit: int | None = None) -> list[ModelType]:
@@ -16,6 +16,12 @@ class BasicDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get_by_id(self, id: Any) -> ModelType:
         db_obj = self.db_manager.get_by_id(id)
+        if not db_obj:
+            raise NotFoundDbException(origin=self.db_manager.model.__tablename__)
+        return db_obj
+
+    def get_by_unique_attribute(self, value: Any, name: str):
+        db_obj = self.db_manager.get_by_unique_attribute(value, name)
         if not db_obj:
             raise NotFoundDbException(origin=self.db_manager.model.__tablename__)
         return db_obj

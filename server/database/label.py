@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 
 from server.common.models.label import LabelModel
 from server.common.schemas.label import LabelCreateSchema, LabelUpdateSchema
-from server.database.basebdmanager import BaseBdManager
+from server.database.basedbmanager import BaseDbManager
 
 
-class LabelDbManager(BaseBdManager[LabelModel, LabelCreateSchema, LabelUpdateSchema]):
+class LabelDbManager(BaseDbManager[LabelModel, LabelCreateSchema, LabelUpdateSchema]):
 
     def __init__(self, db: Session):
         super().__init__(model=LabelModel, db=db)

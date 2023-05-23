@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 from server.common.models.user import UserModel
 from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
 import server.common.utils.authentication as auth
-from server.database.basebdmanager import BaseBdManager
+from server.database.basedbmanager import BaseDbManager
 
 
-class UserDbManager(BaseBdManager[UserModel, UserCreateSchema, UserUpdateSchema]):
+class UserDbManager(BaseDbManager[UserModel, UserCreateSchema, UserUpdateSchema]):
 
     def __init__(self, db: Session):
         super().__init__(model=UserModel, db=db)

@@ -1,9 +1,7 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 
-from server.common.exceptions.db import NotFoundDbException
 from server.common.exceptions.labeling import UnauthorizedLabelingRemovalException
+from server.common.models.booking import BookingModel
 from server.common.models.label import LabelModel
 from server.common.models.labeling import LabelingModel
 from server.common.models.user import UserModel
@@ -20,18 +18,6 @@ class UserService(BasicDbService[UserModel, UserCreateSchema, UserUpdateSchema])
     def __init__(self, db: Session):
         self.db: Session = db
         super().__init__(db=db, db_manager=UserDbManager)
-
-    def get_by_username(self, username: str) -> UserModel:
-        db_user = UserDbManager(self.db).get_by_username(username=username)
-        if not db_user:
-            raise NotFoundDbException
-        return db_user
-
-    def get_by_email(self, email: str) -> UserModel:
-        db_user = UserDbManager(self.db).get_by_email(email=email)
-        if not db_user:
-            raise NotFoundDbException
-        return db_user
 
     def add_labelings_to_user(self, *, user_id: int, user_labelings: list[LabelingCreateForUserSchema]) -> None:
         labelings = [
@@ -62,3 +48,7 @@ class UserService(BasicDbService[UserModel, UserCreateSchema, UserUpdateSchema])
     def get_active_user_labels(self, user_id: int) -> set[LabelModel]:
         active_labelings = self.get_user_labelings(user_id=user_id, labeling_type=LabelingRequestType.active)
         return set([labeling.labeling_label for labeling in active_labelings])
+
+    def get_user_bookings(self, user_id: int) -> list[BookingModel]:
+        db_user = self.get_by_id(user_id)
+        return db_user.user_bookings
