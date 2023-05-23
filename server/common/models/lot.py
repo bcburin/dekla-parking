@@ -17,9 +17,9 @@ class LotModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     location: Mapped[str] = mapped_column()
     descriptor: Mapped[str] = mapped_column()
-    occupied: Mapped[str] = mapped_column()
-    available: Mapped[str] = mapped_column()
-    fk_Sector_id: Mapped[int] = mapped_column(unique=True)
+    occupied: Mapped[bool] = mapped_column()
+    available: Mapped[bool] = mapped_column()
+    fk_sector_id: Mapped[int] = mapped_column()
 
     # Relationships
     lot_users: Mapped[list['UserModel']] = relationship(

@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from server.common.models.ep_permission import EpPermissionModel
     from server.common.models.label import LabelModel
 
+
 class ExclusivePolicyModel(Base):
     __tablename__ = 'exclusive_policy'
 
@@ -16,7 +17,7 @@ class ExclusivePolicyModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
     descriptor: Mapped[str] = mapped_column()
-    prince: Mapped[float] = mapped_column()
+    price: Mapped[float] = mapped_column()
 
     # Relationships
     exclusive_policy_sector: Mapped[list['SectorModel']] = relationship(back_populates='sector_exclusive_policy', viewonly=True)

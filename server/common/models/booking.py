@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
+from datetime import datetime
 
 if TYPE_CHECKING:
     from server.common.models.lot import LotModel
@@ -14,12 +15,12 @@ class BookingModel(Base):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_User_id: Mapped[int] = mapped_column(unique=True)
-    fk_Lot_id: Mapped[int] = mapped_column(unique=True)
+    fk_user_id: Mapped[int] = mapped_column()
+    fk_lot_id: Mapped[int] = mapped_column()
     book_time: Mapped[str] = mapped_column()
     status: Mapped[str] = mapped_column()
-    start_time: Mapped[str] = mapped_column()
-    end_time: Mapped[str] = mapped_column()
+    start_time: Mapped[datetime] = mapped_column()
+    end_time: Mapped[datetime] = mapped_column()
 
     # Relationships
     booking_users: Mapped['UserModel'] = relationship(

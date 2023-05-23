@@ -15,10 +15,10 @@ class SectorModel(Base):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_PublicPolicy_id: Mapped[int] = mapped_column(unique=True)
-    fk_ExclusivePolicy_id: Mapped[int] = mapped_column(unique=True)
+    fk_PublicPolicy_id: Mapped[int] = mapped_column()
+    fk_ExclusivePolicy_id: Mapped[int] = mapped_column()
     name: Mapped[str] = mapped_column()
-    available: Mapped[str] = mapped_column()
+    available: Mapped[bool] = mapped_column()
 
     # Relationships
     sector_public_policy: Mapped['PublicPolicyModel'] = relationship(
