@@ -45,8 +45,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = dbu.UserDbManager(db).get_by_username(username=username)
+def authenticate_user(db: Session, email: str, password: str):
+    user = dbu.UserDbManager(db).get_by_email(email=email)
     if not user or not verify_password(password, user.password_hash):
         return False
     return user

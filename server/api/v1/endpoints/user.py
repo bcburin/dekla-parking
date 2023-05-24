@@ -24,7 +24,7 @@ class UserAPI:
 
     @router.post(path='/login')
     async def login(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-        user = authenticate_user(self.db, form_data.username, form_data.password)
+        user = authenticate_user(self.db, email=form_data.username, password=form_data.password)
         if not user:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Incorrect username or password.')
         access_token = create_access_token(data={'sub': user.username})
