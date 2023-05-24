@@ -2,15 +2,12 @@ import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import Head from "next/head";
 import NextLink from "next/link";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
-  Alert,
   Box,
   Button,
-  FormHelperText,
   Link,
   Stack,
   Tab,
@@ -19,8 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-
-import { signIn } from "../../store/auth-slice";
+import { login } from "src/store/auth-actions";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -33,7 +29,10 @@ const Page = () => {
       submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
+      email: Yup.string()
+        .email("Must be a valid email")
+        .max(255)
+        .required("Email is required"),
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
@@ -41,6 +40,7 @@ const Page = () => {
         await dispatch(login(values.email, values.password));
         await router.push("/");
       } catch (err) {
+        console.log(err);
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
@@ -108,9 +108,13 @@ const Page = () => {
                     value={formik.values.email}
                   />
                   <TextField
-                    error={!!(formik.touched.password && formik.errors.password)}
+                    error={
+                      !!(formik.touched.password && formik.errors.password)
+                    }
                     fullWidth
-                    helperText={formik.touched.password && formik.errors.password}
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                    }
                     label="Password"
                     name="password"
                     onBlur={formik.handleBlur}
@@ -124,7 +128,13 @@ const Page = () => {
                     {formik.errors.submit}
                   </Typography>
                 )}
-                <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
+                <Button
+                  fullWidth
+                  size="large"
+                  sx={{ mt: 3 }}
+                  type="submit"
+                  variant="contained"
+                >
                   Continue
                 </Button>
               </form>
@@ -135,7 +145,8 @@ const Page = () => {
                   Not available in the demo
                 </Typography>
                 <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the demo.
+                  To prevent unnecessary costs we disabled this feature in the
+                  demo.
                 </Typography>
               </div>
             )}
@@ -147,32 +158,5 @@ const Page = () => {
 };
 
 Page.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
-
-const login = (email, password) => {
-  return async (dispatch) => {
-    try {
-      const formData = new FormData();
-      formData.append("grant_type", "password");
-      formData.append("username", email);
-      formData.append("password", password);
-
-      const config = {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      };
-
-      const response = await axios.post("http://127.0.0.1:8000/v1/users/login", formData, config);
-
-      const token = response.data.access_token;
-
-      localStorage.setItem("accessToken", token);
-
-      dispatch(signIn(token));
-    } catch (error) {
-      throw new Error("Invalid email or password");
-    }
-  };
-};
 
 export default Page;
