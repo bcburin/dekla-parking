@@ -26,4 +26,4 @@ class BookingModel(Base):
     # Relationships
     booking_user: Mapped['UserModel'] = relationship(
         back_populates='user_bookings', viewonly=True)
-    booking_lot: Mapped['LotModel'] = relationship(back_populates='lot_bookings', viewonly=True)
+    #booking_lot: Mapped['LotModel'] = relationship(back_populates='lot_bookings', viewonly=True)

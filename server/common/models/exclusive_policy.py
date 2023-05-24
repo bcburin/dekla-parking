@@ -20,7 +20,7 @@ class ExclusivePolicyModel(Base):
     price: Mapped[float] = mapped_column()
 
     # Relationships
-    exclusive_policy_sectors: Mapped[list['SectorModel']] = relationship(back_populates='sector_exclusive_policy', viewonly=True)
-    exclusive_policy_ep_permisions: Mapped[list['EpPermissionModel']] = relationship(back_populates='ep_permission_exclusive_policy', viewonly=True)
-    exclusive_policy_labels: Mapped[list['LabelModel']] = relationship(
-        secondary='ep_permission', back_populates='label_exclusive_policy',viewonly=True)
+    #exclusive_policy_sectors: Mapped[list['SectorModel']] = relationship(back_populates='sector_exclusive_policy', viewonly=True)
+    #exclusive_policy_ep_permisions: Mapped[list['EpPermissionModel']] = relationship(back_populates='ep_permission_exclusive_policy', viewonly=True)
+    #exclusive_policy_labels: Mapped[list['LabelModel']] = relationship(
+        #secondary='ep_permission', back_populates='label_exclusive_policy',viewonly=True)

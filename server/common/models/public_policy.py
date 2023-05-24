@@ -18,4 +18,4 @@ class PublicPolicyModel(Base):
     price: Mapped[float] = mapped_column()
 
     # Relationships
-    public_policy_sectors: Mapped[list['SectorModel']] = relationship(back_populates='sector_public_policy', viewonly=True)
+    #public_policy_sectors: Mapped[list['SectorModel']] = relationship(back_populates='sector_public_policy', viewonly=True)
