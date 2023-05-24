@@ -30,9 +30,22 @@ class UserModel(Base):
 
     # Relationships
     user_labels: Mapped[list['LabelModel']] = relationship(
-        secondary='labeling', back_populates='label_users', viewonly=True)
-    user_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeled_user', viewonly=True)
-    #user_lots: Mapped[list['LotModel']] = relationship(
-        #secondary='booking', back_populates='lot_users', viewonly=True)
-    #user_bookings: Mapped[list['BookingModel']] = relationship(back_populates='booking_user', viewonly=True)
+        secondary='labeling',
+        back_populates='label_users',
+        viewonly=True
+    )
+    user_labelings: Mapped[list['LabelingModel']] = relationship(
+        back_populates='labeled_user',
+        viewonly=True,
+        cascade='all, delete'
+    )
+    user_lots: Mapped[list['LotModel']] = relationship(
+        secondary='booking',
+        back_populates='lot_users',
+        viewonly=True
+    )
+    user_bookings: Mapped[list['BookingModel']] = relationship(
+        back_populates='booking_user',
+        viewonly=True
+    )
 

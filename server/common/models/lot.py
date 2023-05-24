@@ -27,7 +27,16 @@ class LotModel(Base):
         server_default=func.current_timestamp(), onupdate=func.current_timestamp)
 
     # Relationships
-    # lot_users: Mapped[list['UserModel']] = relationship(
-    # secondary='booking', back_populates='user_lots', viewonly=True)
-    #lot_bookings: Mapped[list['BookingModel']] = relationship(back_populates='booking_lot', viewonly=True)
-    #lot_sector: Mapped['SectorModel'] = relationship(back_populates='sector_lots', viewonly=True)
+    lot_users: Mapped[list['UserModel']] = relationship(
+        secondary='booking',
+        back_populates='user_lots',
+        viewonly=True
+    )
+    lot_bookings: Mapped[list['BookingModel']] = relationship(
+        back_populates='booking_lot',
+        viewonly=True
+    )
+    # lot_sector: Mapped['SectorModel'] = relationship(
+    #     back_populates='sector_lots',
+    #     viewonly=True
+    # )
