@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
+
 
 class BookingBaseSchema(BaseModel):
     book_time: datetime
@@ -15,14 +17,14 @@ class BookingCreateSchema(BookingBaseSchema):
     fk_lot_id: int
 
 
-class BookingUpdateSchema(BookingBaseSchema):
+class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
     book_time: datetime | None
     status: str | None
     start_time: datetime | None
     end_time: datetime | None
 
 
-class BookingOutSchema(BookingBaseSchema):
+class BookingOutSchema(BookingBaseSchema, BaseOutSchema):
     id: int
 
     class Config:

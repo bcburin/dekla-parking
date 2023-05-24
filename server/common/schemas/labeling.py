@@ -4,9 +4,9 @@ from enum import Enum, auto
 from fastapi_restful.enums import CamelStrEnum
 from pydantic import BaseModel
 
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.user import UserOutSchema
-from server.common.utils.classes import NonNullAttributeVerifier
 
 
 class LabelingBaseSchema(BaseModel):
@@ -23,11 +23,11 @@ class LabelingCreateSchema(LabelingBaseSchema):
     fk_label_id: int
 
 
-class LabelingUpdateSchema(LabelingBaseSchema, NonNullAttributeVerifier):
+class LabelingUpdateSchema(LabelingBaseSchema, BaseUpdateSchema):
     pass
 
 
-class LabelingOutSchema(LabelingBaseSchema):
+class LabelingOutSchema(LabelingBaseSchema, BaseOutSchema):
     id: int
     labeled_user: UserOutSchema
     labeling_label: LabelOutSchema

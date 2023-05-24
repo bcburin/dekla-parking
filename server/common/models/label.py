@@ -1,5 +1,7 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
+from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
@@ -19,12 +21,17 @@ class LabelModel(Base):
     name: Mapped[str] = mapped_column(unique=True)
     description: Mapped[str] = mapped_column()
     priority: Mapped[int] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(
+        server_default=func.current_timestamp())
+    updated_at: Mapped[datetime] = mapped_column(
+        server_default=func.current_timestamp(), onupdate=func.current_timestamp)
 
     # Relationships
     label_users: Mapped[list['UserModel']] = relationship(
         secondary='labeling', back_populates='user_labels', viewonly=True)
-    label_labelings: Mapped[list['LabelingModel']] = relationship(back_populates='labeling_label', viewonly=True)
-    #label_ep_permissions: Mapped[list['EpPermissionModel']] = relationship(
-         #back_populates='ep_permission_label', viewonly=True)
-    #label_exclusive_policies: Mapped[list['ExclusivePolicyModel']] = relationship(
-         #secondary='ep_permission', back_populates='exclusive_policy_labels', viewonly=True)
+    label_labelings: Mapped[list['LabelingModel']] = relationship(
+        back_populates='labeling_label', viewonly=True)
+    # label_ep_permissions: Mapped[list['EpPermissionModel']] = relationship(
+    #     back_populates='ep_permission_label', viewonly=True)
+    # label_exclusive_policies: Mapped[list['ExclusivePolicyModel']] = relationship(
+    #     secondary='ep_permission', back_populates='exclusive_policy_label', viewonly=True)
