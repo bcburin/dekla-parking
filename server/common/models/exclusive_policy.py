@@ -1,5 +1,7 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
+from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
@@ -18,6 +20,9 @@ class ExclusivePolicyModel(Base):
     name: Mapped[str] = mapped_column()
     descriptor: Mapped[str] = mapped_column()
     price: Mapped[float] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(server_default=func.current_timestamp())
+    updated_at: Mapped[datetime] = mapped_column(
+        server_default=func.current_timestamp(), onupdate=func.current_timestamp)
 
     # Relationships
     #exclusive_policy_sectors: Mapped[list['SectorModel']] = relationship(back_populates='sector_exclusive_policy', viewonly=True)

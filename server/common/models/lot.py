@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from server.database.config import Base
@@ -21,10 +22,12 @@ class LotModel(Base):
     occupied: Mapped[bool] = mapped_column()
     available: Mapped[bool] = mapped_column()
     fk_sector_id: Mapped[int] = mapped_column(ForeignKey('sector.id'))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.current_timestamp())
+    updated_at: Mapped[datetime] = mapped_column(
+        server_default=func.current_timestamp(), onupdate=func.current_timestamp)
 
     # Relationships
-    #lot_users: Mapped[list['UserModel']] = relationship(
-        #secondary='booking', back_populates='user_lots', viewonly=True)
+    # lot_users: Mapped[list['UserModel']] = relationship(
+    # secondary='booking', back_populates='user_lots', viewonly=True)
     #lot_bookings: Mapped[list['BookingModel']] = relationship(back_populates='booking_lot', viewonly=True)
     #lot_sector: Mapped['SectorModel'] = relationship(back_populates='sector_lots', viewonly=True)
-

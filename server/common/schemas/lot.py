@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from server.common.utils.classes import NonNullAttributeVerifier
+from server.common.schemas.base import BaseUpdateSchema
 
 
 class LotBaseSchema(BaseModel):
@@ -15,7 +15,7 @@ class LotCreateSchema(LotBaseSchema):
     pass
 
 
-class LotUpdateSchema(LotBaseSchema, NonNullAttributeVerifier):
+class LotUpdateSchema(LotBaseSchema, BaseUpdateSchema):
     location: str | None
     descriptor: str | None
     occupied: bool | None

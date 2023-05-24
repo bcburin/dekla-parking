@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from server.common.utils.classes import NonNullAttributeVerifier
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 
 
 class LabelBaseSchema(BaseModel):
@@ -13,13 +13,13 @@ class LabelCreateSchema(LabelBaseSchema):
     pass
 
 
-class LabelUpdateSchema(LabelBaseSchema, NonNullAttributeVerifier):
+class LabelUpdateSchema(LabelBaseSchema, BaseUpdateSchema):
     name: str | None
     description: str | None
     priority: int | None
 
 
-class LabelOutSchema(LabelBaseSchema):
+class LabelOutSchema(LabelBaseSchema, BaseOutSchema):
     id: int
 
     class Config:

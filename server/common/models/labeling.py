@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from fastapi_restful.guid_type import GUID
 
 from server.database.config import Base
 
