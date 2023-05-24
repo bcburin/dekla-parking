@@ -26,7 +26,7 @@ class UserModel(Base):
     is_admin: Mapped[bool] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(server_default=func.current_timestamp())
     updated_at: Mapped[datetime] = mapped_column(
-        server_default=func.current_timestamp(), onupdate=func.current_timestamp)
+        server_default=func.current_timestamp(), onupdate=func.current_timestamp())
 
     # Relationships
     user_labels: Mapped[list['LabelModel']] = relationship(

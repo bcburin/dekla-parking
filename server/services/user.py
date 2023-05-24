@@ -19,6 +19,11 @@ class UserService(BasicDbService[UserModel, UserCreateSchema, UserUpdateSchema])
         self.db: Session = db
         super().__init__(db=db, db_manager=UserDbManager)
 
+    def toggle_is_admin(self, user_id: int) -> UserModel:
+        db_user = self.get_by_id(user_id)
+        updated_user = self.db_manager.update(db_obj=db_user, obj={'is_admin': not db_user.is_admin})
+        return updated_user
+
     def add_labelings_to_user(self, *, user_id: int, user_labelings: list[LabelingCreateForUserSchema]) -> None:
         labelings = [
             LabelingCreateSchema(**user_labeling.dict(), fk_user_id=user_id) for user_labeling in user_labelings]
