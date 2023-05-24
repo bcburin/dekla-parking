@@ -166,6 +166,8 @@ client/node_modules
 client/.pnp
 client/.pnp.js
 
+client/.next
+
 # testing
 client/coverage
 

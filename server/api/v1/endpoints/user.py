@@ -58,6 +58,10 @@ class UserAPI:
     def update_user(self, user_id: int, user: UserUpdateSchema):
         return UserService(self.db).update(id=user_id, obj=user)
 
+    @router.put(path='/{user_id}/toggle-admin', response_model=UserOutSchema)
+    def toggle_user_is_admin(self, user_id: int):
+        return UserService(self.db).toggle_is_admin(user_id)
+
     @router.delete(path='/{user_id}', response_model=UserOutSchema)
     def delete_user(self, user_id: int):
         return UserService(self.db).delete(id=user_id)
@@ -82,4 +86,4 @@ class UserAPI:
 
     @router.get('{user_id}/bookings', response_model=list[BookingOutSchema])
     def get_user_bookings(self, user_id: int):
-        return UserService(self).get_user_bookings(user_id)
+        return UserService(self.db).get_user_bookings(user_id)
