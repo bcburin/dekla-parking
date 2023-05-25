@@ -1,11 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_400_BAD_REQUEST
 
+from server.api.v1.endpoints.base import register_db_routes
+from server.common.models.user import UserModel
 from server.common.schemas.booking import BookingOutSchema
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.labeling import LabelingCreateForUserSchema, LabelingOutSchema, \
@@ -16,6 +18,16 @@ from server.common.utils.authentication import create_access_token, authenticate
 from server.services.user import UserService
 
 router = APIRouter(prefix='/users', tags=['users'])
+
+
+register_db_routes(
+    router=router,
+    service=UserService,
+    model=UserModel,
+    create_schema=UserCreateSchema,
+    update_schema=UserUpdateSchema,
+    out_schema=UserOutSchema
+)
 
 
 @cbv(router)
@@ -30,17 +42,9 @@ class UserAPI:
         access_token = create_access_token(data={'sub': user.username})
         return {'access_token': access_token, 'token_type': 'bearer'}
 
-    @router.get(path='/', response_model=list[UserOutSchema])
-    def get_all_users(self, skip: int = Query(default=0, ge=0), limit: int | None = Query(default=100, ge=0)):
-        return UserService(self.db).get_all(skip=skip, limit=limit)
-
     @router.get(path='/me', response_model=UserOutSchema)
     def get_user_me(self, current_user: Annotated[UserOutSchema, Depends(get_current_user)]):
         return current_user
-
-    @router.get(path='/{user_id}', response_model=UserOutSchema)
-    def get_user_by_id(self, user_id: int):
-        return UserService(self.db).get_by_id(user_id)
 
     @router.get(path='/emails/{email}', response_model=UserOutSchema)
     def get_user_by_email(self, email: str):
@@ -50,21 +54,9 @@ class UserAPI:
     def get_user_by_username(self, username: str):
         return UserService(self.db).get_by_unique_attribute(username, 'username')
 
-    @router.post(path='/', response_model=UserOutSchema)
-    def create_user(self, user: UserCreateSchema):
-        return UserService(self.db).create(obj=user)
-
-    @router.put(path='/{user_id}', response_model=UserOutSchema)
-    def update_user(self, user_id: int, user: UserUpdateSchema):
-        return UserService(self.db).update(id=user_id, obj=user)
-
     @router.put(path='/{user_id}/toggle-admin', response_model=UserOutSchema)
     def toggle_user_is_admin(self, user_id: int):
         return UserService(self.db).toggle_is_admin(user_id)
-
-    @router.delete(path='/{user_id}', response_model=UserOutSchema)
-    def delete_user(self, user_id: int):
-        return UserService(self.db).delete(id=user_id)
 
     @router.post(path='/{user_id}/labelings', response_model=list[LabelingOutSchema])
     def add_labeling_to_user(self, user_id: int, user_labelings: list[LabelingCreateForUserSchema]):
