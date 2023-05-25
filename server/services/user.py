@@ -7,7 +7,7 @@ from server.common.models.labeling import LabelingModel
 from server.common.models.user import UserModel
 from server.common.schemas.labeling import LabelingCreateSchema, LabelingCreateForUserSchema, LabelingRequestType
 from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
-from server.common.utils.labeling import get_labeling_is_active, get_labeling_is_expired
+from server.common.utils import get_is_active, get_is_expired
 from server.database.labeling import LabelingDbManager
 from server.database.user import UserDbManager
 from server.services.dbservice import BaseDbService
@@ -43,11 +43,11 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
         if not labeling_type or labeling_type == LabelingRequestType.all:
             return db_user.user_labelings
         if labeling_type == LabelingRequestType.active:
-            return [labeling for labeling in db_user.user_labelings if get_labeling_is_active(labeling)]
+            return [labeling for labeling in db_user.user_labelings if get_is_active(obj=labeling)]
         if labeling_type == LabelingRequestType.inactive:
-            return [labeling for labeling in db_user.user_labelings if not get_labeling_is_active(labeling)]
+            return [labeling for labeling in db_user.user_labelings if not get_is_active(obj=labeling)]
         if labeling_type == LabelingRequestType.expired:
-            return [labeling for labeling in db_user.user_labelings if not get_labeling_is_expired(labeling)]
+            return [labeling for labeling in db_user.user_labelings if not get_is_expired(obj=labeling)]
         return db_user.user_labelings
 
     def get_active_user_labels(self, user_id: int) -> set[LabelModel]:

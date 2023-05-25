@@ -9,6 +9,8 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_401_UNAUTHORIZED
 
+from server.common.exceptions.auth import AuthException
+from server.common.schemas.user import UserOutSchema
 from server.database.config import get_db
 import server.database.user as dbu
 
@@ -70,3 +72,27 @@ def get_current_user(db: Annotated[Session, Depends(get_db)], token: Annotated[s
         raise credentials_exception
     return user
 
+
+CurrentUser = Annotated[UserOutSchema, Depends(get_current_user)]
+
+
+class AuthReq:
+    """
+    Contains static methods to be used in FastAPI's Depends() in order to enforce authentication requirements.
+    """
+
+    @staticmethod
+    def current_user_has_permission(current_user: CurrentUser):
+        if not current_user:
+            raise AuthException('Not Authenticated')
+        if not current_user.is_admin:
+            raise AuthException('Not enough permissions')
+
+    @staticmethod
+    def current_user_is_authenticated(current_user: CurrentUser):
+        if not current_user:
+            raise AuthException('Not Authenticated')
+
+    @staticmethod
+    def no_auth_restrictions():
+        pass

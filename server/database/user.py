@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from server.common.models.user import UserModel
 from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
-import server.common.utils.authentication as auth
+import server.services.auth as auth
 from server.database.basedbmanager import BaseDbManager
 
 
