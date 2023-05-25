@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuthenticated: false,
-  isLoading: true,
   token: null,
 };
 
@@ -14,20 +13,18 @@ const authSlice = createSlice({
       const token = action.payload;
       if (token) {
         state.isAuthenticated = true;
-        state.isLoading = false;
         state.token = token;
       } else {
         state.isAuthenticated = false;
-        state.isLoading = false;
       }
     },
     signIn: (state, action) => {
       state.isAuthenticated = true;
-      state.token = action.payload.token;
+      state.token = action.payload;
     },
     signOut: (state) => {
       state.isAuthenticated = false;
-      state.token = false;
+      state.token = null;
     },
   },
 });

@@ -9,7 +9,15 @@ import {
   Grid,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SecurityIcon from "@mui/icons-material/Security";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
@@ -17,6 +25,28 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 import ConfirmationModal from "src/components/confirmation-modal";
+import { register, baseUrl } from "src/store/auth-actions";
+import { useSelector } from "react-redux";
+
+const UserToolbar = ({ onClick }) => {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport />
+      <Button
+        startIcon={
+          <SvgIcon fontSize="small">
+            <PlusIcon />
+          </SvgIcon>
+        }
+        variant="contained"
+        onClick={onClick}
+      />
+    </GridToolbarContainer>
+  );
+};
 
 const Page = () => {
   const [users, setUsers] = useState([]);
@@ -24,12 +54,16 @@ const Page = () => {
     isOpen: false,
     user: null,
   });
+  const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
+  const token = useSelector((store) => store.auth.token);
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/v1/users/?skip=0&limit=100"
-      );
+      const response = await axios.get(`${baseUrl}/users/?skip=0&limit=100`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const users = response.data;
       setUsers(users);
     } catch (e) {
@@ -44,7 +78,7 @@ const Page = () => {
           isOpen: false,
           user: null,
         });
-        await axios.get(`http://127.0.0.1:8000/v1/users/${userId}`);
+        await axios.get(`${baseUrl}/v1/users/${userId}`);
         await fetchUserData();
       } catch (e) {
         console.log(e);
@@ -56,9 +90,20 @@ const Page = () => {
   const toggleAdmin = useCallback(
     (userId) => async () => {
       try {
-        await axios.put(
-          `http://127.0.0.1:8000/v1/users/${userId}/toggle-admin`
-        );
+        await axios.put(`${baseUrl}/users/${userId}/toggle-admin`);
+        await fetchUserData();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    []
+  );
+
+  const createUser = useCallback(
+    (user) => async () => {
+      try {
+        setCreateModalIsOpen(false);
+        await register(user);
         await fetchUserData();
       } catch (e) {
         console.log(e);
@@ -133,7 +178,10 @@ const Page = () => {
                   <DataGrid
                     rows={users}
                     columns={columns}
-                    slots={{ toolbar: GridToolbar }}
+                    components={{ Toolbar: UserToolbar }}
+                    componentsProps={{
+                      toolbar: { onClick: () => setCreateModalIsOpen(true) },
+                    }}
                     checkboxSelection
                     disableRowSelectionOnClick
                   />

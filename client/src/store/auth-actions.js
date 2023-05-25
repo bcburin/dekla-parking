@@ -1,7 +1,7 @@
 import axios from "axios";
 import { signIn } from "./auth-slice";
 
-const baseUrl = "http://127.0.0.1:8000/v1";
+export const baseUrl = "http://127.0.0.1:8000/v1";
 
 export const login = (email, password) => {
   return async (dispatch) => {
