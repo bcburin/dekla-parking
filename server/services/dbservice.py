@@ -6,9 +6,9 @@ from server.common.exceptions.db import NotFoundDbException, NoUpdatesProvidedDb
 from server.database.basedbmanager import BaseDbManager, ModelType, CreateSchemaType, UpdateSchemaType
 
 
-class BasicDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+class BaseDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
-    def __init__(self, *, db: Session, db_manager: Type[BaseDbManager]):
+    def __init__(self, *, db: Session, db_manager: Type[BaseDbManager] | None = None):
         self.db_manager = db_manager(db=db)
 
     def get_all(self, skip: int = 0, limit: int | None = None) -> list[ModelType]:

@@ -10,10 +10,10 @@ from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
 from server.common.utils.labeling import get_labeling_is_active, get_labeling_is_expired
 from server.database.labeling import LabelingDbManager
 from server.database.user import UserDbManager
-from server.services.dbservice import BasicDbService
+from server.services.dbservice import BaseDbService
 
 
-class UserService(BasicDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
+class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
 
     def __init__(self, db: Session):
         self.db: Session = db
