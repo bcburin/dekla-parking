@@ -16,6 +16,10 @@ class BookingCreateSchema(BookingBaseSchema):
     fk_user_id: int
     fk_lot_id: int
 
+class BookingCreateForUserSchema(BookingBaseSchema):
+    fk_lot_id: int
+
+
 
 class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
     book_time: datetime | None

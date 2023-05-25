@@ -9,3 +9,4 @@ class BookingDbManager(BaseDbManager[BookingModel, BookingCreateSchema, BookingU
 
     def __init__(self, db: Session):
         super().__init__(model=BookingModel, db=db)
+

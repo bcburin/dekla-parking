@@ -1,7 +1,5 @@
 from datetime import datetime
-from enum import Enum, auto
 
-from fastapi_restful.enums import CamelStrEnum
 from pydantic import BaseModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
@@ -35,10 +33,4 @@ class LabelingOutSchema(LabelingBaseSchema, BaseOutSchema):
     class Config:
         orm_mode = True
 
-
-class LabelingRequestType(CamelStrEnum):
-    all = auto()
-    active = auto()
-    inactive = auto()
-    expired = auto()
 
