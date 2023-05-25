@@ -1,10 +1,8 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from server.database.config import Base
+from server.common.models.base import BaseModel
 
 if TYPE_CHECKING:
     from server.common.models.label import LabelModel
@@ -13,7 +11,7 @@ if TYPE_CHECKING:
     from server.common.models.booking import BookingModel
 
 
-class UserModel(Base):
+class UserModel(BaseModel):
     __tablename__ = 'user'
 
     # Fields
@@ -24,9 +22,6 @@ class UserModel(Base):
     last_name: Mapped[str] = mapped_column()
     password_hash: Mapped[str] = mapped_column()
     is_admin: Mapped[bool] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column(server_default=func.current_timestamp())
-    updated_at: Mapped[datetime] = mapped_column(
-        server_default=func.current_timestamp(), onupdate=func.current_timestamp())
 
     # Relationships
     user_labels: Mapped[list['LabelModel']] = relationship(

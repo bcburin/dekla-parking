@@ -6,7 +6,8 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy import create_engine
 
 from server.api.api import api
-from server.database.config import Base, DBConfig
+from server.database.config import DBConfig
+from server.common.models.base import BaseModel
 
 
 @api.get('/')
@@ -46,6 +47,6 @@ if __name__ == '__main__':
     # Update environment variables that configure the server and the database connection
     update_environment_variables(arguments)
     # Create database and tables if they do not exist yet
-    Base.metadata.create_all(create_engine(DBConfig().get_uri()))
+    BaseModel.metadata.create_all(create_engine(DBConfig().get_uri()))
     # Run server
     uvicorn.run("app:api", host=arguments.host, port=int(arguments.port), reload=arguments.dev_mode)
