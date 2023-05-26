@@ -38,8 +38,8 @@ class UserDbManager(BaseDbManager[UserModel, UserCreateSchema, UserUpdateSchema]
             update_data = obj
         else:
             update_data = obj.dict(exclude_unset=True)
-        if 'password_new' in update_data:
-            password_new_hash = auth.get_password_hash(update_data['password_new'])
-            update_data['password_hash'] = password_new_hash
-            del update_data['password_new']
+        if 'password' in update_data:
+            password_hash = auth.get_password_hash(update_data['password'])
+            update_data['password_hash'] = password_hash
+            del update_data['password']
         return super().update(db_obj=db_obj, obj=update_data)
