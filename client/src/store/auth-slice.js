@@ -20,7 +20,7 @@ const authSlice = createSlice({
     },
     signIn: (state, action) => {
       state.isAuthenticated = true;
-      state.token = action.payload;
+      state.token = action.payload.token;
     },
     signOut: (state) => {
       state.isAuthenticated = false;

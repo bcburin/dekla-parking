@@ -1,52 +1,23 @@
-import Head from "next/head";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import {
-  Box,
-  Button,
-  Container,
-  Stack,
-  SvgIcon,
-  Typography,
-  Grid,
-} from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarDensitySelector,
-  GridToolbarExport,
-} from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SecurityIcon from "@mui/icons-material/Security";
-import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
+  deleteManyUsers,
+  deleteUser,
+  getUsers,
+  toggleAdmin,
+  updateUser,
+} from "src/api/users";
+import { useCallback, useEffect, useState } from "react";
 
-import axios from "axios";
-import { useState, useEffect, useCallback } from "react";
+import ActionsToolbar from "src/components/actions-toolbar";
 import ConfirmationModal from "src/components/confirmation-modal";
-import { register, baseUrl } from "src/store/auth-actions";
-import { useSelector } from "react-redux";
-
-const UserToolbar = ({ onClick }) => {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
-      <Button
-        startIcon={
-          <SvgIcon fontSize="small">
-            <PlusIcon />
-          </SvgIcon>
-        }
-        variant="contained"
-        onClick={onClick}
-      />
-    </GridToolbarContainer>
-  );
-};
+import CreateUserModal from "src/components/create-user-modal";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import Head from "next/head";
+import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
+import UpdateUserModal from "src/components/update-user-modal";
 
 const Page = () => {
   const [users, setUsers] = useState([]);
@@ -54,32 +25,29 @@ const Page = () => {
     isOpen: false,
     user: null,
   });
+  const [updateModalState, setUpdateModalState] = useState({
+    isOpen: false,
+    user: null,
+  });
+  const [deleteManyModelIsOpen, setDeleteManyModalIsOpen] = useState(false);
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
-  const token = useSelector((store) => store.auth.token);
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  const fetchUserData = async () => {
+  const getUsersHandler = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/users/?skip=0&limit=100`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const users = response.data;
+      const users = await getUsers();
       setUsers(users);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const deleteUser = useCallback(
+  const deleteUserHandler = useCallback(
     (userId) => async () => {
       try {
-        setDeleteModalState({
-          isOpen: false,
-          user: null,
-        });
-        await axios.get(`${baseUrl}/v1/users/${userId}`);
-        await fetchUserData();
+        setDeleteModalState({ isOpen: false, user: null });
+        await deleteUser(userId);
+        await getUsersHandler();
       } catch (e) {
         console.log(e);
       }
@@ -87,24 +55,30 @@ const Page = () => {
     []
   );
 
-  const toggleAdmin = useCallback(
+  const updateUserHandler = useCallback((user) => async () => {
+    try {
+      setUpdateModalState({ isOpen: false, user: null });
+      await updateUser(user.id, user);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  const deleteManyUsersHandler = useCallback(async () => {
+    try {
+      setDeleteManyModalIsOpen(false);
+      await deleteManyUsers(selectedRows);
+      await getUsersHandler();
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  const toggleAdminHandler = useCallback(
     (userId) => async () => {
       try {
-        await axios.put(`${baseUrl}/users/${userId}/toggle-admin`);
-        await fetchUserData();
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    []
-  );
-
-  const createUser = useCallback(
-    (user) => async () => {
-      try {
-        setCreateModalIsOpen(false);
-        await register(user);
-        await fetchUserData();
+        await toggleAdmin(userId);
+        await getUsersHandler();
       } catch (e) {
         console.log(e);
       }
@@ -113,7 +87,7 @@ const Page = () => {
   );
 
   useEffect(() => {
-    fetchUserData();
+    getUsersHandler();
   }, []);
 
   const columns = [
@@ -148,9 +122,15 @@ const Page = () => {
           onClick={() => setDeleteModalState({ user: params, isOpen: true })}
         />,
         <GridActionsCellItem
-          icon={<SecurityIcon />}
+          icon={<SecurityRoundedIcon />}
           label="Toggle Admin"
-          onClick={toggleAdmin(params.id)}
+          onClick={toggleAdminHandler(params.id)}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EditRoundedIcon />}
+          label="Edit"
+          onClick={() => setUpdateModalState({ user: params, isOpen: true })}
           showInMenu
         />,
       ],
@@ -178,12 +158,18 @@ const Page = () => {
                   <DataGrid
                     rows={users}
                     columns={columns}
-                    components={{ Toolbar: UserToolbar }}
+                    components={{ Toolbar: ActionsToolbar }}
                     componentsProps={{
-                      toolbar: { onClick: () => setCreateModalIsOpen(true) },
+                      toolbar: {
+                        onCreateClick: () => setCreateModalIsOpen(true),
+                        onRefreshClick: getUsersHandler,
+                        onDeleteClick: () => setDeleteManyModalIsOpen(true),
+                        deleteIsDisabled: selectedRows.length == 0,
+                      },
                     }}
                     checkboxSelection
                     disableRowSelectionOnClick
+                    onRowSelectionModelChange={(ids) => setSelectedRows(ids)}
                   />
                 </Stack>
               </Stack>
@@ -194,15 +180,39 @@ const Page = () => {
 
       <ConfirmationModal
         open={deleteModalState.isOpen}
-        onClose={() =>
-          setDeleteModalState({
-            isOpen: false,
-            user: null,
-          })
-        }
-        onConfirm={deleteUser(deleteModalState.user?.id)}
+        onClose={() => ({ isOpen: false, user: null })}
+        onConfirm={deleteUserHandler(deleteModalState.user?.id)}
         title="Delete User"
         content="Are you sure you want to delete this user?"
+      />
+
+      <ConfirmationModal
+        open={deleteManyModelIsOpen}
+        onClose={() => setDeleteManyModalIsOpen(false)}
+        onConfirm={deleteManyUsersHandler}
+        title="Delete Users"
+        content="Are you sure you want to delete these users?"
+      />
+
+      <CreateUserModal
+        open={createModalIsOpen}
+        onClose={() => setCreateModalIsOpen(false)}
+        onConfirm={async () => {
+          setCreateModalIsOpen(false);
+          await getUsersHandler();
+        }}
+        title={"Create User"}
+      />
+
+      <UpdateUserModal
+        open={updateModalState.isOpen}
+        onClose={() => setUpdateModalState({ isOpen: false, user: null })}
+        onConfirm={async () => {
+          await updateUserHandler(updateModalState.user);
+          await getUsersHandler();
+        }}
+        title={"Edit User Data"}
+        user={updateModalState.user}
       />
     </>
   );

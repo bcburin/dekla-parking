@@ -1,11 +1,13 @@
+import * as Yup from "yup";
+
+import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+
+import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/navigation";
+import { createUser } from "src/api/users";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import { register } from "src/store/auth-actions";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
@@ -28,8 +30,8 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await register(values);
-        router.push("/");
+        await createUser(values);
+        router.push("/auth/login");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });

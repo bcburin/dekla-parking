@@ -27,26 +27,9 @@ export const login = (email, password) => {
 
       localStorage.setItem("accessToken", token);
 
-      dispatch(signIn(token));
+      dispatch(signIn({ token }));
     } catch (error) {
       throw new Error("Invalid email or password");
     }
   };
-};
-
-export const register = async (user) => {
-  try {
-    const response = await axios.post(`${baseUrl}/users`, {
-      username: user.email.replace(/@.*/, ""),
-      email: user.email,
-      first_name: user.firstName,
-      last_name: user.lastName,
-      is_admin: false,
-      password: user.password,
-    });
-
-    console.log(response);
-  } catch (e) {
-    throw new Error("Unable to create user");
-  }
 };
