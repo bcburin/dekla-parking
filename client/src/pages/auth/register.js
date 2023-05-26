@@ -5,9 +5,9 @@ import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import Head from "next/head";
 import NextLink from "next/link";
-import { createUser } from "src/api/users";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
+import userAPI from "src/api/users";
 
 const Page = () => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await createUser(values);
+        await userAPI.createEntity(values);
         router.push("/auth/login");
       } catch (err) {
         helpers.setStatus({ success: false });

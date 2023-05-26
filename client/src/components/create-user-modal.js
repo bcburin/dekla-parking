@@ -7,8 +7,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { createUser } from "src/api/users";
 import { useFormik } from "formik";
+import userAPI from "src/api/users";
 
 const CreateUserModal = ({ open, onClose, onConfirm, title }) => {
   const formik = useFormik({
@@ -30,7 +30,7 @@ const CreateUserModal = ({ open, onClose, onConfirm, title }) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await createUser(values);
+        await userAPI.createEntity(values);
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });

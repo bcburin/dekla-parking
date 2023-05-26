@@ -1,12 +1,5 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import {
-  deleteManyUsers,
-  deleteUser,
-  getUsers,
-  toggleAdmin,
-  updateUser,
-} from "src/api/users";
 import { useCallback, useEffect, useState } from "react";
 
 import ActionsToolbar from "src/components/actions-toolbar";
@@ -18,6 +11,7 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Head from "next/head";
 import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 import UpdateUserModal from "src/components/update-user-modal";
+import userAPI from "src/api/users";
 
 const Page = () => {
   const [users, setUsers] = useState([]);
@@ -35,7 +29,7 @@ const Page = () => {
 
   const getUsersHandler = async () => {
     try {
-      const users = await getUsers();
+      const users = await userAPI.getEntities();
       setUsers(users);
     } catch (e) {
       console.log(e);
@@ -46,7 +40,7 @@ const Page = () => {
     (userId) => async () => {
       try {
         setDeleteModalState({ isOpen: false, user: null });
-        await deleteUser(userId);
+        await userAPI.deleteEntity(userId);
         await getUsersHandler();
       } catch (e) {
         console.log(e);
@@ -58,7 +52,7 @@ const Page = () => {
   const updateUserHandler = useCallback((user) => async () => {
     try {
       setUpdateModalState({ isOpen: false, user: null });
-      await updateUser(user.id, user);
+      await userAPI.updateEntity(user.id, user);
     } catch (e) {
       console.log(e);
     }
@@ -67,7 +61,7 @@ const Page = () => {
   const deleteManyUsersHandler = useCallback(async () => {
     try {
       setDeleteManyModalIsOpen(false);
-      await deleteManyUsers(selectedRows);
+      await userAPI.deleteManyEntities(selectedRows);
       await getUsersHandler();
     } catch (e) {
       console.log(e);
@@ -77,7 +71,7 @@ const Page = () => {
   const toggleAdminHandler = useCallback(
     (userId) => async () => {
       try {
-        await toggleAdmin(userId);
+        await userAPI.toggleAdmin(userId);
         await getUsersHandler();
       } catch (e) {
         console.log(e);
@@ -94,18 +88,18 @@ const Page = () => {
     { field: "id", headerName: "ID", width: 90 },
     { field: "username", headerName: "Username", width: 150 },
     { field: "email", headerName: "E-mail", width: 200 },
-    { field: "first_name", headerName: "First Name", width: 150 },
-    { field: "last_name", headerName: "Last Name", width: 150 },
-    { field: "is_admin", headerName: "Is admin?", width: 80, type: "boolean" },
+    { field: "firstName", headerName: "First Name", width: 150 },
+    { field: "lastName", headerName: "Last Name", width: 150 },
+    { field: "isAdmin", headerName: "Is admin?", width: 80, type: "boolean" },
     {
-      field: "created_at",
+      field: "createdAt",
       headerName: "Creation",
       width: 150,
       type: "date",
       valueGetter: ({ value }) => value && new Date(value),
     },
     {
-      field: "updated_at",
+      field: "updatedAt",
       headerName: "Last Update",
       width: 200,
       type: "dateTime",
