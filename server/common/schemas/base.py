@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 
-class BaseOutSchema(BaseModel):
+class BaseOutSchema(APIModel):
     created_at: datetime
     updated_at: datetime
 

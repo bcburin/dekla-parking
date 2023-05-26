@@ -1,9 +1,10 @@
-from pydantic import BaseModel, EmailStr
+from fastapi_restful.api_model import APIModel
+from pydantic import EmailStr
 
 from server.common.schemas.base import BaseOutSchema
 
 
-class UserBaseSchema(BaseModel):
+class UserBaseSchema(APIModel):
     username: str
     email: EmailStr
     first_name: str

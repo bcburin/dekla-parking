@@ -1,15 +1,15 @@
 from datetime import datetime
-from enum import Enum, auto
+from enum import auto
 
+from fastapi_restful.api_model import APIModel
 from fastapi_restful.enums import CamelStrEnum
-from pydantic import BaseModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.user import UserOutSchema
 
 
-class LabelingBaseSchema(BaseModel):
+class LabelingBaseSchema(APIModel):
     start_time: datetime | None
     end_time: datetime | None
 

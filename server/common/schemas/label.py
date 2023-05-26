@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 
 
-class LabelBaseSchema(BaseModel):
+class LabelBaseSchema(APIModel):
     name: str
     description: str
     priority: int

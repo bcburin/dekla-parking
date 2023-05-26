@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 
 
-class BookingBaseSchema(BaseModel):
+class BookingBaseSchema(APIModel):
     book_time: datetime
     status: str
     start_time: datetime
