@@ -19,6 +19,7 @@ class LabelModel(BaseModel):
     name: Mapped[str] = mapped_column(unique=True)
     description: Mapped[str] = mapped_column()
     priority: Mapped[int] = mapped_column()
+    color: Mapped[str] = mapped_column()
 
     # Relationships
     label_users: Mapped[list['UserModel']] = relationship(

@@ -7,6 +7,7 @@ class LabelBaseSchema(APIModel):
     name: str
     description: str
     priority: int
+    color: str
 
 
 class LabelCreateSchema(LabelBaseSchema):
@@ -17,6 +18,7 @@ class LabelUpdateSchema(LabelBaseSchema, BaseUpdateSchema):
     name: str | None
     description: str | None
     priority: int | None
+    color: str | None
 
 
 class LabelOutSchema(LabelBaseSchema, BaseOutSchema):
