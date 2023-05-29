@@ -16,8 +16,8 @@ class SectorModel(BaseModel):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_pp_id: Mapped[int] = mapped_column(ForeignKey('public_policy.id'))
-    fk_ep_id: Mapped[int] = mapped_column(ForeignKey('exclusive_policy.id'))
+    fk_pp_id: Mapped[int] = mapped_column(ForeignKey('public_policy.id'), nullable=True)
+    fk_ep_id: Mapped[int] = mapped_column(ForeignKey('exclusive_policy.id'), nullable=True)
     name: Mapped[str] = mapped_column()
     available: Mapped[bool] = mapped_column()
 

@@ -3,6 +3,8 @@ from datetime import datetime
 from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
+from server.common.schemas.user import UserOutSchema
+from server.common.schemas.lot import LotOutSchema
 
 
 class BookingBaseSchema(APIModel):
@@ -17,6 +19,10 @@ class BookingCreateSchema(BookingBaseSchema):
     fk_lot_id: int
 
 
+class BookingCreateForUserSchema(BookingBaseSchema):
+    fk_lot_id: int
+
+
 class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
     book_time: datetime | None
     status: str | None
@@ -26,6 +32,8 @@ class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
 
 class BookingOutSchema(BookingBaseSchema, BaseOutSchema):
     id: int
+    booking_lot = LotOutSchema
+    booking_user = UserOutSchema
 
     class Config:
         orm_mode = True

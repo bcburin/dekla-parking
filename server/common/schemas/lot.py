@@ -8,7 +8,7 @@ class LotBaseSchema(APIModel):
     descriptor: str
     occupied: bool = False
     available: bool = True
-    fk_sector_id: bool | None = None
+
 
 
 class LotCreateSchema(LotBaseSchema):
@@ -20,7 +20,7 @@ class LotUpdateSchema(LotBaseSchema, BaseUpdateSchema):
     descriptor: str | None
     occupied: bool | None
     available: bool | None
-
+    fk_sector_id: int
 
 class LotOutSchema(LotBaseSchema):
     id: int

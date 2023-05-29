@@ -1,5 +1,5 @@
-from fastapi_restful.api_model import APIModel
 from pydantic import EmailStr
+from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseOutSchema, BaseUpdateSchema
 

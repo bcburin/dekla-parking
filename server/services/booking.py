@@ -6,7 +6,7 @@ from server.database.booking import BookingDbManager
 from server.services.dbservice import BaseDbService
 
 
-class LotService(BaseDbService[BookingModel, BookingCreateSchema, BookingUpdateSchema]):
+class BookingService(BaseDbService[BookingModel, BookingCreateSchema, BookingUpdateSchema]):
 
     def __init__(self, db: Session):
         self.db = db

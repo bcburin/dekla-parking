@@ -9,10 +9,10 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from server.api.v1.endpoints.base import register_db_routes, RouteType
 from server.common.exceptions.auth import AuthException
 from server.common.models.user import UserModel
-from server.common.schemas.booking import BookingOutSchema
+from server.common.schemas.booking import BookingOutSchema, BookingCreateForUserSchema
 from server.common.schemas.label import LabelOutSchema
-from server.common.schemas.labeling import LabelingCreateForUserSchema, LabelingOutSchema, \
-    LabelingRequestType
+from server.common.schemas.labeling import LabelingCreateForUserSchema, LabelingOutSchema
+from server.common.schemas.base import ActivityRequestType
 from server.database.config import get_db
 from server.common.schemas.user import UserOutSchema, UserCreateSchema, UserUpdateSchema
 from server.services.auth import create_access_token, authenticate_user, get_current_user, AuthReq, CurrentUser
@@ -94,7 +94,7 @@ class UserAPI:
             raise AuthException('Not Authenticated')
         return current_user
 
-    @router.get(path='/emails/{email}', response_model=UserOutSchema)
+    @router.get(path='/emails/{email}', response_model=UserOutSchema, dependencies=[Depends(AuthReq.current_user_has_permission)])
     def get_user_by_email(self, email: str):
         return UserService(self.db).get_by_unique_attribute(email, 'email')
 
@@ -118,7 +118,7 @@ class UserAPI:
         dependencies=[Depends(AuthReq.current_user_has_permission)])
     def add_labeling_to_user(self, user_id: int, user_labelings: list[LabelingCreateForUserSchema]):
         UserService(self.db).add_labelings_to_user(user_id=user_id, user_labelings=user_labelings)
-        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=LabelingRequestType.all)
+        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=ActivityRequestType.all)
 
     @router.delete(
         path='/{user_id}/labelings',
@@ -126,13 +126,13 @@ class UserAPI:
         dependencies=[Depends(AuthReq.current_user_has_permission)])
     def remove_labeling_from_user(self, user_id: int, label_ids: list[int]):
         UserService(self.db).remove_labelings_from_user(user_id=user_id, labeling_ids=label_ids)
-        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=LabelingRequestType.all)
+        return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=ActivityRequestType.all)
 
     @router.get(
         '/{user_id}/labelings',
         response_model=list[LabelingOutSchema],
         dependencies=[Depends(AuthReq.current_user_has_permission)])
-    def get_user_labelings(self, user_id: int, labeling_type: LabelingRequestType | None = None):
+    def get_user_labelings(self, user_id: int, labeling_type: ActivityRequestType | None = None):
         return UserService(self.db).get_user_labelings(user_id=user_id, labeling_type=labeling_type)
 
     @router.get(
@@ -142,9 +142,25 @@ class UserAPI:
     def get_user_active_labels(self, user_id: int):
         return UserService(self.db).get_active_user_labels(user_id)
 
+    @router.post(
+        path='/{user_id}/bookings',
+        response_model=list[BookingOutSchema],
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
+    def add_booking_to_user(self, user_id: int, user_bookings: list[BookingCreateForUserSchema]):
+        UserService(self.db).add_bookings_to_user(user_id=user_id, user_bookings=user_bookings)
+        return UserService(self.db).get_user_bookings(user_id=user_id, booking_type=ActivityRequestType.all)
+
+    @router.delete(
+        path='/{user_id}/bookings',
+        response_model=list[LabelingOutSchema],
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
+    def remove_booking_from_user(self, user_id: int, label_ids: list[int]):
+        UserService(self.db).remove_bookings_from_user(user_id=user_id, booking_ids=label_ids)
+        return UserService(self.db).get_user_bookings(user_id=user_id, booking_type=ActivityRequestType.all)
+
     @router.get(
         '{user_id}/bookings',
         response_model=list[BookingOutSchema],
         dependencies=[Depends(AuthReq.current_user_has_permission)])
-    def get_user_bookings(self, user_id: int):
-        return UserService(self.db).get_user_bookings(user_id)
+    def get_user_bookings(self, user_id: int, booking_type: ActivityRequestType):
+        return UserService(self.db).get_user_bookings(user_id=user_id, booking_type=booking_type)

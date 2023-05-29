@@ -21,6 +21,7 @@ class EpPermissionModel(BaseModel, IntervalModel):
     fk_label_id: Mapped[int] = mapped_column(ForeignKey('label.id'))
 
     # Relationships
+'''
     ep_permission_exclusive_policy: Mapped['ExclusivePolicyModel'] = relationship(
         back_populates='exclusive_policy_ep_permissions',
         viewonly=True
@@ -29,3 +30,5 @@ class EpPermissionModel(BaseModel, IntervalModel):
         back_populates='label_ep_permissions',
         viewonly=True
     )
+
+'''

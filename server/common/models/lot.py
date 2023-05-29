@@ -20,7 +20,7 @@ class LotModel(BaseModel):
     descriptor: Mapped[str] = mapped_column()
     occupied: Mapped[bool] = mapped_column()
     available: Mapped[bool] = mapped_column()
-    fk_sector_id: Mapped[int] = mapped_column(ForeignKey('sector.id'))
+    fk_sector_id: Mapped[int] = mapped_column(ForeignKey('sector.id'), nullable=True)
 
     # Relationships
     lot_users: Mapped[list['UserModel']] = relationship(

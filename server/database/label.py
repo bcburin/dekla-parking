@@ -13,4 +13,3 @@ class LabelDbManager(BaseDbManager[LabelModel, LabelCreateSchema, LabelUpdateSch
     def get_by_name(self, name: str) -> LabelModel | None:
         return self.get_by_unique_attribute(name, 'name')
 
-

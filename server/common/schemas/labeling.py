@@ -1,8 +1,6 @@
 from datetime import datetime
-from enum import auto
 
 from fastapi_restful.api_model import APIModel
-from fastapi_restful.enums import CamelStrEnum
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 from server.common.schemas.label import LabelOutSchema
@@ -34,11 +32,3 @@ class LabelingOutSchema(LabelingBaseSchema, BaseOutSchema):
 
     class Config:
         orm_mode = True
-
-
-class LabelingRequestType(CamelStrEnum):
-    all = auto()
-    active = auto()
-    inactive = auto()
-    expired = auto()
-
