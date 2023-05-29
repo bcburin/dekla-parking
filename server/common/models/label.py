@@ -33,11 +33,13 @@ class LabelModel(BaseModel):
     )
 '''
     label_exclusive_policies: Mapped[list['ExclusivePolicyModel']] = relationship(
-        secondary='ep_permission', back_populates='exclusive_policy_labels', viewonly=True)
+        secondary='ep_permission',
+        back_populates='exclusive_policy_labels',
+        viewonly=True)
 
     label_ep_permissions: Mapped[list['EpPermissionModel']] = relationship(
-        back_populates='ep_permission_label',
-        viewonly=True,
-        cascade='all, delete'
+            back_populates='ep_permission_label',
+            viewonly=True,
+            cascade='all, delete'
     )
-         '''
+'''

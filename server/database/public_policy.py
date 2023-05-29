@@ -13,13 +13,3 @@ class PublicPolicyDbManager(BaseDbManager[PublicPolicyModel, PublicPolicyCreateS
     def get_by_name(self, name: str) -> PublicPolicyModel | None:
         return self.get_by_unique_attribute(name, 'name')
 
-    def create(self, *, obj: PublicPolicyCreateSchema, refresh: bool = True) -> PublicPolicyModel:
-        user_data = {
-            **obj.dict(),
-        }
-        db_user = PublicPolicyModel(**user_data)
-        self.db.add(db_user)
-        self.db.commit()
-        if refresh:
-            self.db.refresh(db_user)
-        return db_user

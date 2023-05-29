@@ -24,7 +24,7 @@ class ExclusivePolicyModel(BaseModel):
         back_populates='sector_exclusive_policy',
         viewonly=True
     )
-    '''
+'''
     exclusive_policy_ep_permissions: Mapped[list['EpPermissionModel']] = relationship(
         back_populates='ep_permission_exclusive_policy',
         cascade='all, delete',
@@ -35,4 +35,5 @@ class ExclusivePolicyModel(BaseModel):
         back_populates='label_exclusive_policies',
         viewonly=True
     )
-    '''
+
+'''

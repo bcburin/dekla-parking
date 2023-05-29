@@ -13,13 +13,3 @@ class ExclusivePolicyDbManager(BaseDbManager[ExclusivePolicyModel, ExclusivePoli
     def get_by_name(self, name: str) -> ExclusivePolicyModel | None:
         return self.get_by_unique_attribute(name, 'name')
 
-    def create(self, *, obj: ExclusivePolicyCreateSchema, refresh: bool = True) -> ExclusivePolicyModel:
-        user_data = {
-            **obj.dict(),
-        }
-        db_user = ExclusivePolicyModel(**user_data)
-        self.db.add(db_user)
-        self.db.commit()
-        if refresh:
-            self.db.refresh(db_user)
-        return db_user
