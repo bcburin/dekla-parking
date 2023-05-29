@@ -5,7 +5,7 @@ from server.common.schemas.sector import SectorOutSchema, SectorCreateSchema, Se
 from server.services.sector import SectorService
 from server.common.models.sector import SectorModel
 
-router = APIRouter(prefix='/sector', tags=['sector'])
+router = APIRouter(prefix='/sectors', tags=['sectors'])
 
 register_db_routes(
     router=router,
