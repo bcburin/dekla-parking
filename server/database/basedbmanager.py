@@ -41,7 +41,7 @@ class BaseDbManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             obj: CreateSchemaType,
             refresh: bool = True
     ) -> ModelType:
-        obj_in_data = jsonable_encoder(obj)
+        obj_in_data = jsonable_encoder(obj, by_alias=False)
         db_obj = self.model(**obj_in_data)  # type: ignore
         self.db.add(db_obj)
         self.db.commit()
