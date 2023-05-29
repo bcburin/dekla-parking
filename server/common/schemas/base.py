@@ -2,10 +2,10 @@ from datetime import datetime
 from enum import auto
 
 from fastapi_restful.enums import CamelStrEnum
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 
-class BaseOutSchema(BaseModel):
+class BaseOutSchema(APIModel):
     created_at: datetime
     updated_at: datetime
 

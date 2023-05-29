@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from server.common.exceptions.labeling import UnauthorizedLabelingRemovalException
+from server.common.exceptions.booking import UnauthorizedBookingRemovalException
 from server.common.models.booking import BookingModel
 from server.common.models.label import LabelModel
 from server.common.models.labeling import LabelingModel
@@ -45,11 +46,11 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
         db_user = self.get_by_id(user_id)
         if not labeling_type or labeling_type == ActivityRequestType.all:
             return db_user.user_labelings
-        if labeling_type == LabelingRequestType.active:
+        if labeling_type == ActivityRequestType.active:
             return [labeling for labeling in db_user.user_labelings if get_is_active(obj=labeling)]
-        if labeling_type == LabelingRequestType.inactive:
+        if labeling_type == ActivityRequestType.inactive:
             return [labeling for labeling in db_user.user_labelings if not get_is_active(obj=labeling)]
-        if labeling_type == LabelingRequestType.expired:
+        if labeling_type == ActivityRequestType.expired:
             return [labeling for labeling in db_user.user_labelings if not get_is_expired(obj=labeling)]
         return db_user.user_labelings
 
@@ -59,7 +60,7 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
 
     def add_bookings_to_user(self, *, user_id: int, user_bookings: list[BookingCreateForUserSchema]) -> None:
         bookings = [
-            LabelingCreateSchema(**user_labeling.dict(), fk_user_id=user_id) for user_labeling in user_bookings]
+            BookingCreateSchema(**user_booking.dict(), fk_user_id=user_id) for user_booking in user_bookings]
         for booking in bookings:
             BookingDbManager(self.db).create(obj=booking)
 
@@ -67,9 +68,18 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
         for booking_id in booking_ids:
             booking = BookingDbManager(self.db).get_by_id(booking_id)
             if booking.fk_user_id != user_id:
-                raise UnauthorizedLabelingRemovalException(user_id=user_id, booking_id=booking_id)
+                raise UnauthorizedBookingRemovalException(user_id=user_id, booking_id=booking_id)
             LabelingDbManager(self.db).remove(pk=booking_id)
 
-    def get_user_bookings(self, user_id: int) -> list[BookingModel]:
+    def get_user_bookings(
+            self, *, user_id: int, booking_type: ActivityRequestType | None = None) -> list[BookingModel]:
         db_user = self.get_by_id(user_id)
+        if not booking_type or booking_type == ActivityRequestType.all:
+            return db_user.user_bookings
+        if booking_type == ActivityRequestType.active:
+            return [booking for booking in db_user.user_bookings if get_is_active(obj=booking)]
+        if booking_type == ActivityRequestType.inactive:
+            return [booking for booking in db_user.user_bookings if not get_is_active(obj=booking)]
+        if booking_type == ActivityRequestType.expired:
+            return [booking for booking in db_user.user_bookings if not get_is_expired(obj=booking)]
         return db_user.user_bookings

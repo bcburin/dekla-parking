@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.user import UserOutSchema
 
 
-class LabelingBaseSchema(BaseModel):
+class LabelingBaseSchema(APIModel):
     start_time: datetime | None
     end_time: datetime | None
 

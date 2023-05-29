@@ -1,14 +1,14 @@
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseUpdateSchema
 
 
-class LotBaseSchema(BaseModel):
+class LotBaseSchema(APIModel):
     location: str
     descriptor: str
     occupied: bool = False
     available: bool = True
-    fk_sector_id: bool | None = None
+
 
 
 class LotCreateSchema(LotBaseSchema):
@@ -20,7 +20,7 @@ class LotUpdateSchema(LotBaseSchema, BaseUpdateSchema):
     descriptor: str | None
     occupied: bool | None
     available: bool | None
-
+    fk_sector_id: int
 
 class LotOutSchema(LotBaseSchema):
     id: int

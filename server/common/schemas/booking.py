@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from fastapi_restful.api_model import APIModel
 
 from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
+from server.common.schemas.user import UserOutSchema
+from server.common.schemas.lot import LotOutSchema
 
-
-class BookingBaseSchema(BaseModel):
+class BookingBaseSchema(APIModel):
     book_time: datetime
     status: str
     start_time: datetime
@@ -16,9 +17,9 @@ class BookingCreateSchema(BookingBaseSchema):
     fk_user_id: int
     fk_lot_id: int
 
+
 class BookingCreateForUserSchema(BookingBaseSchema):
     fk_lot_id: int
-
 
 
 class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
@@ -30,6 +31,7 @@ class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
 
 class BookingOutSchema(BookingBaseSchema, BaseOutSchema):
     id: int
-
+    booking_lot = LotOutSchema
+    booking_user = UserOutSchema
     class Config:
         orm_mode = True
