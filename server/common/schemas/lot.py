@@ -17,6 +17,7 @@ class LotCreateSchema(LotBaseSchema):
 
 
 class LotUpdateSchema(LotBaseSchema, BaseUpdateSchema):
+    name: str | None
     location: str | None
     occupied: bool | None
     available: bool | None

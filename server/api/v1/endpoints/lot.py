@@ -20,4 +20,10 @@ register_db_routes(
     out_schema=LotOutSchema
 )
 
+@cbv(router)
+class LotAPI:
+    db: Session = Depends(get_db)
 
+    @router.put('/{lot_id}/assign/{sector_id}', response_model=LotOutSchema)
+    def assign_lot_to_sector(self, lot_id: int, sector_id: int):
+        return LotService(self.db).update(id=lot_id, obj={'fk_sector_id': sector_id})
