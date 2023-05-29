@@ -5,7 +5,10 @@ from server.common.schemas.base import BaseUpdateSchema
 
 class SectorBaseSchema(APIModel):
     name: str
+    description: str
     available: bool = True
+    fk_pp_id: int | None = None
+    fk_ep_id: int | None = None
 
 
 class SectorCreateSchema(SectorBaseSchema):
@@ -15,8 +18,7 @@ class SectorCreateSchema(SectorBaseSchema):
 class SectorUpdateSchema(SectorBaseSchema, BaseUpdateSchema):
     name: str | None
     available: bool | None
-    fk_pp_id: int
-    fk_ep_id: int
+
 
 class SectorOutSchema(SectorBaseSchema):
     id: int

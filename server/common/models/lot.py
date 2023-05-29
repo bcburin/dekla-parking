@@ -16,11 +16,12 @@ class LotModel(BaseModel):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True, index=True)
     location: Mapped[str] = mapped_column()
-    descriptor: Mapped[str] = mapped_column()
+    description: Mapped[str] = mapped_column(nullable=True)
     occupied: Mapped[bool] = mapped_column()
     available: Mapped[bool] = mapped_column()
-    fk_sector_id: Mapped[int] = mapped_column(ForeignKey('sector.id'), nullable=True)
+    fk_sector_id: Mapped[int | None] = mapped_column(ForeignKey('sector.id'), nullable=True)
 
     # Relationships
     lot_users: Mapped[list['UserModel']] = relationship(
@@ -30,9 +31,11 @@ class LotModel(BaseModel):
     )
     lot_bookings: Mapped[list['BookingModel']] = relationship(
         back_populates='booking_lot',
-        viewonly=True
+        viewonly=True,
+        cascade='all, delete'
     )
     lot_sector: Mapped['SectorModel'] = relationship(
         back_populates='sector_lots',
-        viewonly=True
+        viewonly=True,
+        cascade='all, delete'
     )

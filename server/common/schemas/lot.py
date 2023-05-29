@@ -4,11 +4,12 @@ from server.common.schemas.base import BaseUpdateSchema
 
 
 class LotBaseSchema(APIModel):
+    name: str
     location: str
-    descriptor: str
+    description: str | None
     occupied: bool = False
     available: bool = True
-
+    fk_sector_id: int | None = None
 
 
 class LotCreateSchema(LotBaseSchema):
@@ -17,10 +18,9 @@ class LotCreateSchema(LotBaseSchema):
 
 class LotUpdateSchema(LotBaseSchema, BaseUpdateSchema):
     location: str | None
-    descriptor: str | None
     occupied: bool | None
     available: bool | None
-    fk_sector_id: int
+
 
 class LotOutSchema(LotBaseSchema):
     id: int

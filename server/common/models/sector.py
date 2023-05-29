@@ -16,15 +16,16 @@ class SectorModel(BaseModel):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_pp_id: Mapped[int] = mapped_column(ForeignKey('public_policy.id'), nullable=True)
-    fk_ep_id: Mapped[int] = mapped_column(ForeignKey('exclusive_policy.id'), nullable=True)
+    fk_pp_id: Mapped[int | None] = mapped_column(ForeignKey('public_policy.id'), nullable=True)
+    fk_ep_id: Mapped[int | None] = mapped_column(ForeignKey('exclusive_policy.id'), nullable=True)
     name: Mapped[str] = mapped_column()
+    description: Mapped[str] = mapped_column()
     available: Mapped[bool] = mapped_column()
 
     # Relationships
     sector_public_policy: Mapped['PublicPolicyModel'] = relationship(
       back_populates='public_policy_sectors',
-        viewonly=True
+      viewonly=True
     )
     sector_exclusive_policy: Mapped['ExclusivePolicyModel'] = relationship(
         back_populates='exclusive_policy_sectors',
