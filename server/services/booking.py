@@ -20,6 +20,8 @@ class BookingService(BaseDbService[BookingModel, BookingCreateSchema, BookingUpd
         super().__init__(db=db, db_manager=BookingDbManager)
 
     def generate_mock_data(self, n: int, /) -> list[BookingModel]:
+        if n == 0:
+            return []
         db_users = UserDbManager(self.db).get_all(limit=n)
         db_lots = LotDbManager(self.db).get_all(limit=5)
         created_bookings = []

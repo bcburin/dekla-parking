@@ -19,6 +19,8 @@ class LabelingService(BaseDbService[LabelingModel, LabelingCreateSchema, Labelin
         super().__init__(db=db, db_manager=LabelingDbManager)
 
     def generate_mock_data(self, n: int, /) -> list[LabelingModel]:
+        if n == 0:
+            return []
         db_users = UserDbManager(self.db).get_all(limit=n)
         db_labels = LabelDbManager(self.db).get_all(limit=5)
         created_labelings = []
