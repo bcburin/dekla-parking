@@ -17,7 +17,7 @@ export const createBaseAPI = (entityName) => {
 
   return {
     baseUrl,
-    getEntities: async (skip = 0, limit = 100) => {
+    getEntities: async (skip = 0, limit = 500) => {
       const response = await api.get(`${baseUrl}/?skip=${skip}&limit=${limit}`);
       return response.data;
     },

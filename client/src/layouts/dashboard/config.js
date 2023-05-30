@@ -1,3 +1,4 @@
+import BookmarksRoundedIcon from "@mui/icons-material/BookmarksRounded";
 import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 import CogIcon from "@heroicons/react/24/solid/CogIcon";
 import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFilledRounded";
@@ -38,11 +39,11 @@ export const items = [
     ),
   },
   {
-    title: "Companies",
-    path: "/companies",
+    title: "Bookings",
+    path: "/bookings",
     icon: (
       <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
+        <BookmarksRoundedIcon />
       </SvgIcon>
     ),
   },

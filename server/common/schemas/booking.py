@@ -32,8 +32,8 @@ class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
 
 class BookingOutSchema(BookingBaseSchema, BaseOutSchema):
     id: int
-    booking_lot = LotOutSchema
-    booking_user = UserOutSchema
+    booking_lot: LotOutSchema
+    booking_user: UserOutSchema
 
     class Config:
         orm_mode = True
