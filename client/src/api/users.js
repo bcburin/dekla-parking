@@ -1,4 +1,6 @@
-import api, { createBaseAPI } from "src/api/api";
+import api, { baseRootUrl, createBaseAPI } from "src/api/api";
+
+const baseUserUrl = `${baseRootUrl}/users`;
 
 const userAPI = {
   ...createBaseAPI("users"),

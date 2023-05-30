@@ -41,7 +41,6 @@ const Page = () => {
       headerName: "User ID",
       width: 90,
       valueGetter: (params) => {
-        console.log(params);
         return `${params.row.bookingUser.id}`;
       },
     },
@@ -50,7 +49,6 @@ const Page = () => {
       headerName: "Lot ID",
       width: 90,
       valueGetter: (params) => {
-        console.log(params);
         return `${params.row.bookingLot.id}`;
       },
     },
