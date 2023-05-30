@@ -1,6 +1,7 @@
+from abc import ABC, abstractmethod
 from datetime import datetime
 
-from server.common.models.base import IntervalModel
+from server.common.models.base import IntervalModel, BaseModel
 
 
 def get_is_active(*, obj: type[IntervalModel], ref_time: datetime = datetime.now()) -> bool:
@@ -18,3 +19,14 @@ def get_is_expired(*, obj: type[IntervalModel], ref_time: datetime = datetime.no
     if obj.end_time:
         return ref_time > obj.end_time
     return False
+
+
+class IMockDataGenerator(ABC):
+
+    @abstractmethod
+    def generate_mock_data(self, n: int, /) -> list[BaseModel]:
+        """
+        :param n: number of mock entries to create
+        :return: list of entries created
+        """
+        pass

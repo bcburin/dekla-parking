@@ -1,4 +1,7 @@
+from faker import Faker
+from pydantic import EmailStr
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from server.common.exceptions.labeling import UnauthorizedLabelingRemovalException
 from server.common.exceptions.booking import UnauthorizedBookingRemovalException
@@ -10,14 +13,14 @@ from server.common.schemas.booking import BookingCreateSchema, BookingCreateForU
 from server.common.schemas.labeling import LabelingCreateSchema, LabelingCreateForUserSchema
 from server.common.schemas.base import ActivityRequestType
 from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
-from server.common.utils import get_is_active, get_is_expired
+from server.common.utils import get_is_active, get_is_expired, IMockDataGenerator
 from server.database.labeling import LabelingDbManager
 from server.database.user import UserDbManager
 from server.database.booking import BookingDbManager
 from server.services.dbservice import BaseDbService
 
 
-class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
+class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema], IMockDataGenerator):
 
     def __init__(self, db: Session):
         self.db: Session = db
@@ -83,3 +86,27 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema]):
         if booking_type == ActivityRequestType.expired:
             return [booking for booking in db_user.user_bookings if not get_is_expired(obj=booking)]
         return db_user.user_bookings
+
+    def generate_mock_data(self, n: int, /) -> list[UserModel]:
+        created_users = []
+        fake = Faker()
+        for _ in range(n):
+            first_name: str = fake.first_name()
+            last_name: str = fake.last_name()
+            username = (first_name[0:2] + last_name[0:4]).lower()
+            email = EmailStr(username + '@dom.com')
+            user = UserCreateSchema(
+                username=username,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                is_admin=False,
+                password='123'
+            )
+            try:
+                created_user = self.create(obj=user)
+                created_users.append(created_user)
+            except IntegrityError:
+                self.db.rollback()
+                continue
+        return created_users
