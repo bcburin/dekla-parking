@@ -19,7 +19,7 @@ class SectorService(BaseDbService[SectorModel, SectorCreateSchema, SectorUpdateS
     def generate_mock_data(self, n: int, /) -> list[SectorModel]:
         created_sectors = []
         for _ in range(n):
-            name = 'Lot ' + str(randint(1, 1_000_000))
+            name = 'Sector ' + str(randint(1, 1_000_000))
             sector = SectorCreateSchema(name=name, description='Description of ' + name + '.')
             try:
                 created_sector = self.create(obj=sector)
