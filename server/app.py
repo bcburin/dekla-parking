@@ -2,17 +2,11 @@ from argparse import ArgumentParser, Namespace
 from os import environ
 
 import uvicorn
-from fastapi.responses import RedirectResponse
 from sqlalchemy import create_engine
 
 from server.api.api import api
 from server.database.config import DBConfig
 from server.common.models.base import BaseModel
-
-
-@api.get('/')
-async def root():
-    return RedirectResponse(url='/docs')
 
 
 def create_parser() -> ArgumentParser:

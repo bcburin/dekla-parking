@@ -1,26 +1,25 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
 
 from server.api import v1
 from server.common.exceptions.httpexc_provider import IHTTPExceptionProvider
 
-from server.common.models.sector import *
-from server.common.models.ep_permission import *
-from server.common.models.exclusive_policy import *
-from server.common.models.booking import *
-from server.common.models.label import *
-from server.common.models.labeling import *
-from server.common.models.lot import *
-from server.common.models.public_policy import *
-from server.common.models.user import *
 
 api = FastAPI(
     title='Dekla Parking API',
     version='1.0.0'
 )
 
+
 api.include_router(v1.router)
+
+
+@api.get('/')
+async def root():
+    return RedirectResponse(url='/docs')
+
 
 origins = ["http://localhost:3000"]
 
