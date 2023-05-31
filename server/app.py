@@ -43,4 +43,4 @@ if __name__ == '__main__':
     # Create database and tables if they do not exist yet
     BaseModel.metadata.create_all(create_engine(DBConfig().get_uri()))
     # Run server
-    uvicorn.run("app:api", host=arguments.host, port=int(arguments.port), reload=arguments.dev_mode)
+    uvicorn.run("server.app:api", host=arguments.host, port=int(arguments.port), reload=arguments.dev_mode)
