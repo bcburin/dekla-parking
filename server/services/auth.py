@@ -63,7 +63,11 @@ def get_current_user(db: Annotated[Session, Depends(get_db)], token: Annotated[s
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get('sub')
-        if username is None:
+        expire_time: datetime = payload.get('exp')
+        converted_datetime = datetime.fromtimestamp(expire_time)
+        currtime = datetime.utcnow() - timedelta(hours=3)
+        print(converted_datetime, currtime)
+        if username is None or currtime > converted_datetime:
             raise credentials_exception
     except (JWTError, ValidationError):
         raise credentials_exception
