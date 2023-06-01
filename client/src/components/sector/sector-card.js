@@ -88,11 +88,14 @@ const SectorCard = ({ sector }) => {
         </Box>
       </Box>
       <Grid container spacing={2}>
-        {sector.sectorLots.map((lot) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={lot.id}>
-            <LotCard lot={lot} />
-          </Grid>
-        ))}
+        {sector.sectorLots
+          .slice()
+          .sort((a, b) => a.id - b.id)
+          .map((lot) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={lot.id}>
+              <LotCard receivedLot={lot} />
+            </Grid>
+          ))}
       </Grid>
     </Container>
   );
