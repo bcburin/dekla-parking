@@ -25,7 +25,17 @@ class LotService(BaseDbService[LotModel, LotCreateSchema, LotUpdateSchema], IMoc
         if not db_sector:
             raise NotFoundDbException(origin='sector')
         updates = LotUpdateSchema(fk_sector_id=sector_id)
-        self.db_manager.update(db_obj=db_lot, obj=updates)
+        return self.db_manager.update(db_obj=db_lot, obj=updates)
+
+    def toggle_occupied(self, lot_id):
+        db_lot = self.get_by_id(lot_id)
+        updates = LotUpdateSchema(occupied=not db_lot.occupied)
+        return self.db_manager.update(db_obj=db_lot, obj=updates)
+
+    def toggle_available(self, lot_id):
+        db_lot = self.get_by_id(lot_id)
+        updates = LotUpdateSchema(occupied=not db_lot.available)
+        return self.db_manager.update(db_obj=db_lot, obj=updates)
 
     def generate_mock_data(self, n: int, /) -> list[LotModel]:
         created_lots = []
