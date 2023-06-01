@@ -15,7 +15,7 @@ from server.common.schemas.labeling import LabelingCreateForUserSchema, Labeling
 from server.common.schemas.base import ActivityRequestType
 from server.database.config import get_db
 from server.common.schemas.user import UserOutSchema, UserCreateSchema, UserUpdateSchema
-from server.services.auth import create_access_token, authenticate_user, get_current_user, AuthReq, CurrentUser
+from server.services.auth import create_access_token, authenticate_user, AuthReq, CurrentUser
 from server.services.user import UserService
 
 router = APIRouter(prefix='/users', tags=['users'])
@@ -38,6 +38,12 @@ register_db_routes(
 @cbv(router)
 class UserAPI:
     db: Session = Depends(get_db)
+
+    @router.get(path='/me', response_model=UserOutSchema)
+    def get_user_me(self, current_user: CurrentUser):
+        if not current_user:
+            raise AuthException('Not Authenticated')
+        return current_user
 
     @router.get(
         '/{id}',
@@ -88,13 +94,10 @@ class UserAPI:
         access_token = create_access_token(data={'sub': user.username})
         return {'access_token': access_token, 'token_type': 'bearer'}
 
-    @router.get(path='/me', response_model=UserOutSchema)
-    def get_user_me(self, current_user: Annotated[UserOutSchema, Depends(get_current_user)]):
-        if not current_user:
-            raise AuthException('Not Authenticated')
-        return current_user
-
-    @router.get(path='/emails/{email}', response_model=UserOutSchema, dependencies=[Depends(AuthReq.current_user_has_permission)])
+    @router.get(
+        path='/emails/{email}',
+        response_model=UserOutSchema,
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
     def get_user_by_email(self, email: str):
         return UserService(self.db).get_by_unique_attribute(email, 'email')
 
