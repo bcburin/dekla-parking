@@ -18,7 +18,6 @@ class BookingModel(BaseModel, IntervalModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     fk_user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
     fk_lot_id: Mapped[int] = mapped_column(ForeignKey('lot.id'))
-    book_time: Mapped[datetime] = mapped_column()
     status: Mapped[str] = mapped_column()
 
     # Relationships

@@ -8,7 +8,6 @@ from server.common.schemas.lot import LotOutSchema
 
 
 class BookingBaseSchema(APIModel):
-    book_time: datetime
     status: str
     start_time: datetime
     end_time: datetime
@@ -24,7 +23,6 @@ class BookingCreateForUserSchema(BookingBaseSchema):
 
 
 class BookingUpdateSchema(BookingBaseSchema, BaseUpdateSchema):
-    book_time: datetime | None
     status: str | None
     start_time: datetime | None
     end_time: datetime | None

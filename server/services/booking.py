@@ -28,7 +28,6 @@ class BookingService(BaseDbService[BookingModel, BookingCreateSchema, BookingUpd
         for db_user in db_users:
             db_lot = choice(db_lots)
             booking = BookingCreateSchema(
-                book_time=datetime.now(),
                 status='Pending',
                 start_time=datetime.now(),
                 end_time=datetime.now() + timedelta(days=1),
