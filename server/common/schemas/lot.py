@@ -1,6 +1,6 @@
 from fastapi_restful.api_model import APIModel
 
-from server.common.schemas.base import BaseUpdateSchema
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 
 
 class LotBaseSchema(APIModel):
@@ -23,7 +23,7 @@ class LotUpdateSchema(LotBaseSchema, BaseUpdateSchema):
     available: bool | None
 
 
-class LotOutSchema(LotBaseSchema):
+class LotOutSchema(LotBaseSchema, BaseOutSchema):
     id: int
 
     class Config:

@@ -1,6 +1,6 @@
 from fastapi_restful.api_model import APIModel
 
-from server.common.schemas.base import BaseUpdateSchema
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 from server.common.schemas.lot import LotOutSchema
 
 
@@ -21,7 +21,7 @@ class SectorUpdateSchema(SectorBaseSchema, BaseUpdateSchema):
     available: bool | None
 
 
-class SectorOutSchema(SectorBaseSchema):
+class SectorOutSchema(SectorBaseSchema, BaseOutSchema):
     id: int
     sector_lots: list[LotOutSchema]
 

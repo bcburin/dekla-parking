@@ -1,6 +1,6 @@
 from fastapi_restful.api_model import APIModel
 
-from server.common.schemas.base import BaseUpdateSchema
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 
 
 class ExclusivePolicyBaseSchema(APIModel):
@@ -19,7 +19,7 @@ class ExclusivePolicyUpdateSchema(ExclusivePolicyBaseSchema, BaseUpdateSchema):
     price: float | None
 
 
-class ExclusivePolicyOutSchema(ExclusivePolicyBaseSchema):
+class ExclusivePolicyOutSchema(ExclusivePolicyBaseSchema, BaseOutSchema):
     id: int
 
     class Config:

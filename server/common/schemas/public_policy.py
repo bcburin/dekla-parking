@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from server.common.schemas.base import BaseUpdateSchema
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 
 
 class PublicPolicyBaseSchema(BaseModel):
@@ -19,7 +19,7 @@ class PublicPolicyUpdateSchema(PublicPolicyBaseSchema, BaseUpdateSchema):
     price: float | None
 
 
-class PublicPolicyOutSchema(PublicPolicyBaseSchema):
+class PublicPolicyOutSchema(PublicPolicyBaseSchema, BaseOutSchema):
     id: int
 
     class Config:
