@@ -24,9 +24,17 @@ export const login = (email, password) => {
 
       const token = response.data.access_token;
 
+      const userResponse = await axios.get(`${baseRootUrl}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = userResponse.data;
+
       localStorage.setItem("accessToken", token);
 
-      dispatch(signIn({ token }));
+      dispatch(signIn({ token, user }));
     } catch (error) {
       throw new Error("Invalid email or password");
     }
