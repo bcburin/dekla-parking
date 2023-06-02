@@ -51,7 +51,7 @@ const LotCard = ({ receivedLot }) => {
   const handleMenuClose = () => {
     closeTimeout = setTimeout(() => {
       setAnchorEl(null);
-    }, 500);
+    }, 100);
   };
 
   useEffect(() => {

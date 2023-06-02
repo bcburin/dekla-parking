@@ -21,10 +21,13 @@ import UpdateLotModal from "src/components/sector/update-lot-modal";
 import { actions } from "src/store/lot-ui-slice";
 import lotsAPI from "src/api/lots";
 import sectorAPI from "src/api/sectors";
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
+import CreateSectorModal from "src/components/sector/create-sector-modal";
 
 const Page = () => {
   const dispatch = useDispatch();
   const [sectors, setSectors] = useState([]);
+  const [createSectorModalIsOpen, setCreateSectorModalIsOpen] = useState(false);
   const lotUIState = useSelector((state) => state.lotUI);
 
   const getSectorsHandler = async () => {
@@ -83,11 +86,26 @@ const Page = () => {
                 >
                   Refresh
                 </Button>
+                <Button
+                  startIcon={
+                    <SvgIcon>
+                      <AddCircleOutlinedIcon />
+                    </SvgIcon>
+                  }
+                  variant="contained"
+                  onClick={() => setCreateSectorModalIsOpen(true)}
+                >
+                  Create Sector
+                </Button>
               </Stack>
             </Stack>
             <Stack spacing={2} alignItems="center">
               {sectors.map((sector) => (
-                <SectorCard key={sector.id} sector={sector} />
+                <SectorCard
+                  key={sector.id}
+                  sector={sector}
+                  refreshSectors={getSectorsHandler}
+                />
               ))}
             </Stack>
           </Stack>
@@ -103,6 +121,12 @@ const Page = () => {
         onConfirm={() => deleteLotHandler()}
         title="Delete Parking Lot"
         content={`Are you sure you want to delete this parking lot?`}
+      />
+      <CreateSectorModal
+        open={createSectorModalIsOpen}
+        onClose={() => setCreateSectorModalIsOpen(false)}
+        onConfirm={() => setCreateSectorModalIsOpen(false)}
+        onRefresh={getSectorsHandler}
       />
     </>
   );
