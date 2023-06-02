@@ -1,8 +1,10 @@
 from typing import Type, Any, Generic
 
+from fastapi_restful.api_model import APIModel
 from sqlalchemy.orm import Session
 
 from server.common.exceptions.db import NotFoundDbException, NoUpdatesProvidedDbException
+from server.common.schemas.base import BaseUpdateSchema
 from server.database.basedbmanager import BaseDbManager, ModelType, CreateSchemaType, UpdateSchemaType
 
 
@@ -26,12 +28,12 @@ class BaseDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise NotFoundDbException(origin=self.db_manager.model.__tablename__)
         return db_obj
 
-    def create(self, obj: CreateSchemaType) -> ModelType:
+    def create(self, obj: CreateSchemaType | APIModel) -> ModelType:
         # TODO: check for unique key violations
         created_obj = self.db_manager.create(obj=obj)
         return created_obj
 
-    def update(self, id: Any, obj: UpdateSchemaType) -> ModelType:
+    def update(self, id: Any, obj: UpdateSchemaType | BaseUpdateSchema) -> ModelType:
         db_obj = self.db_manager.get_by_id(id)
         if not db_obj:
             raise NotFoundDbException(origin=self.db_manager.model.__tablename__)
