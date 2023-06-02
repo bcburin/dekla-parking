@@ -16,6 +16,10 @@ const lotsAPI = {
     const response = await api.put(`${baseLotUrl}/${lotId}/assign/${sectorId}`);
     return response.data;
   },
+  bookForMe: async (lotId, bookTimes) => {
+    const response = await api.post(`${baseLotUrl}/${lotId}/book-for-me`, bookTimes);
+    return response.data;
+  },
 };
 
 export default lotsAPI;

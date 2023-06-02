@@ -33,9 +33,34 @@ const Page = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "status", headerName: "Status", width: 150 },
-    { field: "bookTime", headerName: "Book Time", width: 200 },
-    { field: "startTime", headerName: "Start Time", width: 200 },
-    { field: "endTime", headerName: "End Time", width: 200 },
+    {
+      field: "startTime",
+      headerName: "Start Time",
+      width: 200,
+      type: "dateTime",
+      valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      field: "endTime",
+      headerName: "End Time",
+      width: 200,
+      type: "dateTime",
+      valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      field: "createdAt",
+      headerName: "Book Time",
+      width: 150,
+      type: "date",
+      valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      field: "updatedAt",
+      headerName: "Last Update",
+      width: 200,
+      type: "dateTime",
+      valueGetter: ({ value }) => value && new Date(value),
+    },
     {
       field: "userId",
       headerName: "User ID",
@@ -104,8 +129,6 @@ const Page = () => {
                     componentsProps={{
                       toolbar: {
                         onRefreshClick: getBookingsHandler,
-                        // onDeleteClick: () => setDeleteManyModalIsOpen(true),
-                        // deleteIsDisabled: selectedRows.length == 0,
                       },
                     }}
                     checkboxSelection

@@ -6,6 +6,7 @@ const initialState = {
   deleteLotModalIsOpen: false,
   assignLotModalIsOpen: false,
   editLotModalIsOpen: false,
+  bookLotModalIsOpen: false,
 };
 
 const lotUISlice = createSlice({
@@ -28,6 +29,10 @@ const lotUISlice = createSlice({
       state.selectedLot = action.payload.lot;
       state.editLotModalIsOpen = true;
     },
+    openBookLotModal: (state, action) => {
+      state.selectedLot = action.payload.lot;
+      state.bookLotModalIsOpen = true;
+    },
     closeShowLotModal: (state) => {
       state.selectedLot = null;
       state.showLotModalIsOpen = false;
@@ -43,6 +48,10 @@ const lotUISlice = createSlice({
     closeEditLotModal: (state) => {
       state.selectedLot = null;
       state.editLotModalIsOpen = false;
+    },
+    closeBookLotModal: (state) => {
+      state.selectedLot = null;
+      state.bookLotModalIsOpen = false;
     },
   },
 });

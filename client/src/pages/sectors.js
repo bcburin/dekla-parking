@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import BookLotModal from "src/components/sector/book-lot-modal";
 import CachedRoundedIcon from "@mui/icons-material/CachedRounded";
 import ConfirmationModal from "src/components/confirmation-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
@@ -93,6 +94,7 @@ const Page = () => {
         </Container>
       </Box>
       <ShowLotModal />
+      <BookLotModal />
       <ReassignLotModal sectors={sectors} onReassign={getSectorsHandler} />
       <UpdateLotModal onUpdate={getSectorsHandler} />
       <ConfirmationModal

@@ -62,16 +62,7 @@ const LotCard = ({ receivedLot }) => {
 
   return (
     <>
-      <Card
-        sx={{
-          maxWidth: 300,
-          // border: `4px solid ${getColor()}`,
-          // borderRadius: "20px",
-          // width: "100%",
-          // height: "100%",
-          // boxSizing: "border-box",
-        }}
-      >
+      <Card sx={{ maxWidth: 300 }}>
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: getColor() }}>
@@ -116,7 +107,7 @@ const LotCard = ({ receivedLot }) => {
           </IconButton>
           <IconButton
             aria-label="book-lot"
-            onClick={() => dispatch(actions.openShowLotModal({ lot }))}
+            onClick={() => dispatch(actions.openBookLotModal({ lot }))}
           >
             <BookmarksRoundedIcon />
           </IconButton>
