@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
 
 from server.api.v1.endpoints.base import register_db_routes
@@ -19,15 +20,17 @@ register_db_routes(
 )
 
 
-@router.put('/{booking_id}/approve', response_model=BookingOutSchema)
-def approve_booking(booking_id: int, db: Session = Depends(get_db)):
-    updates = BookingUpdateSchema(status='Approved')
-    return BookingService(db).update(id=booking_id, obj=updates)
+@cbv(router)
+class BookingAPI:
+    db: Session = Depends(get_db)
 
+    @router.put('/{booking_id}/approve', response_model=BookingOutSchema)
+    def approve_booking(self, booking_id: int):
+        updates = BookingUpdateSchema(status='Approved')
+        return BookingService(self.db).update(id=booking_id, obj=updates)
 
-@router.put('/{booking_id}/reject', response_model=BookingOutSchema)
-def approve_booking(booking_id: int, db: Session = Depends(get_db)):
-    updates = BookingUpdateSchema(status='Rejected')
-    return BookingService(db).update(id=booking_id, obj=updates)
-
+    @router.put('/{booking_id}/reject', response_model=BookingOutSchema)
+    def approve_booking(self, booking_id: int):
+        updates = BookingUpdateSchema(status='Rejected')
+        return BookingService(self.db).update(id=booking_id, obj=updates)
 

@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
 
 from server.api.v1.endpoints.base import register_db_routes
 from server.common.models.lot import LotModel
+from server.common.schemas.booking import BookingOutSchema, BookingCreateSchema, BookingStatusType, \
+    BookingCreateForUserAndLotSchema
 from server.common.schemas.lot import LotOutSchema, LotCreateSchema, LotUpdateSchema
-from server.services.auth import AuthReq
+from server.services.auth import AuthReq, CurrentUser
+from server.services.booking import BookingService
 from server.services.lot import LotService
 from server.database.config import get_db
 
@@ -41,10 +44,44 @@ class LotAPI:
     def toggle_lot_occupied(self, lot_id: int):
         return LotService(self.db).toggle_occupied(lot_id)
 
-    # @router.put(
-    #     '/{lot_id}/toggle-available',
-    #     response_model=LotOutSchema,
-    #     dependencies=[Depends(AuthReq.current_user_has_permission)]
-    # )
-    # def toggle_lot_occupied(self, lot_id: int):
-    #     return LotService(self.db).toggle_available(lot_id)
+    @router.put(
+        '/{lot_id}/toggle-available',
+        response_model=LotOutSchema,
+        dependencies=[Depends(AuthReq.current_user_has_permission)]
+    )
+    def toggle_lot_available(self, lot_id: int):
+        return LotService(self.db).toggle_available(lot_id)
+
+    @router.post(
+        '/{lot_id}/book-for-me',
+        response_model=BookingOutSchema,
+        dependencies=[Depends(AuthReq.current_user_is_authenticated)])
+    def book_lot_for_me(self, lot_id, current_user: CurrentUser, booking_times: BookingCreateForUserAndLotSchema):
+        booking = BookingCreateSchema(
+            status=BookingStatusType.Pending,
+            start_time=booking_times.start_time,
+            end_time=booking_times.end_time,
+            fk_user_id=current_user.id,
+            fk_lot_id=lot_id
+        )
+        return BookingService(self.db).create(obj=booking)
+
+    @router.post(
+        '/{lot_id}/book-for-user/{user_id}',
+        response_model=BookingOutSchema,
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
+    def book_lot_for_user(
+            self,
+            lot_id: int,
+            user_id: int,
+            booking_times: BookingCreateForUserAndLotSchema,
+            status: BookingStatusType = Query(default=BookingStatusType.Approved)
+    ):
+        booking = BookingCreateSchema(
+            status=status,
+            start_time=booking_times.start_time,
+            end_time=booking_times.end_time,
+            fk_user_id=user_id,
+            fk_lot_id=lot_id
+        )
+        return BookingService(self.db).create(obj=booking)
