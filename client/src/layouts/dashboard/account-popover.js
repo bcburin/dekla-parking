@@ -1,12 +1,21 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
-import { Box, Divider, MenuItem, MenuList, Popover, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  MenuItem,
+  MenuList,
+  Popover,
+  Typography,
+} from "@mui/material";
 import { signOut } from "src/store/auth-slice";
+import { useSelector } from "react-redux";
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open } = props;
   const router = useRouter();
+  const loggedUser = useSelector((store) => store.auth.loggedUser);
 
   const handleSignOut = useCallback(() => {
     onClose?.();
@@ -33,7 +42,7 @@ export const AccountPopover = (props) => {
       >
         <Typography variant="overline">Account</Typography>
         <Typography color="text.secondary" variant="body2">
-          Anika Visser
+          {`${loggedUser.firstName} ${loggedUser.lastName}`}
         </Typography>
       </Box>
       <Divider />
