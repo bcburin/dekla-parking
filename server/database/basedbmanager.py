@@ -26,14 +26,26 @@ class BaseDbManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return self.db.query(self.model).filter(getattr(self.model, id_name) == id_value).first()
 
     def get_all(
-            self,
-            *,
+            self, *,
             skip: int = 0,
-            limit: int | None = None
+            limit: int | None = None,
+            filters: dict[str, Any | set[Any]] | None = None,
+            order_by: str = 'id',
+            columns: list | None = None
     ) -> List[ModelType]:
+        query = self.db.query(*columns) if columns else self.db.query(self.model)
+        if filters:
+            for col, val in filters.items():
+                if isinstance(val, set):
+                    query = query.filter(getattr(self.model, col) in val)
+                else:
+                    query = query.filter(getattr(self.model, col) == val)
+        if hasattr(self.model, order_by):
+            query = query.order_by(order_by)
+        query = query.offset(skip)
         if limit:
-            return self.db.query(self.model).offset(skip).limit(limit).all()
-        return self.db.query(self.model).offset(skip).all()
+            query = query.limit(limit)
+        return query.all()
 
     def create(
             self,
