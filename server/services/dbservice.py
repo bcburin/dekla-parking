@@ -13,8 +13,15 @@ class BaseDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, *, db: Session, db_manager: Type[BaseDbManager] | None = None):
         self.db_manager = db_manager(db=db)
 
-    def get_all(self, skip: int = 0, limit: int | None = None) -> list[ModelType]:
-        return self.db_manager.get_all(skip=skip, limit=limit)
+    def get_all(
+            self,
+            skip: int = 0,
+            limit: int | None = None,
+            filters: dict[str, Any | set[Any]] | None = None,
+            order_by: str = 'id',
+            columns: list | None = None
+    ) -> list[ModelType]:
+        return self.db_manager.get_all(skip=skip, limit=limit, filters=filters, order_by=order_by, columns=columns)
 
     def get_by_id(self, id: Any) -> ModelType:
         db_obj = self.db_manager.get_by_id(id)
