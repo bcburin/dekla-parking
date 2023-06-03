@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
 
-from server.api.v1.endpoints.base import register_db_routes
+from server.api.v1.endpoints.base import register_db_routes, RouteType
 from server.common.models.lot import LotModel
 from server.common.schemas.booking import BookingOutSchema, BookingCreateSchema, BookingStatusType, \
     BookingCreateForUserAndLotSchema
@@ -20,13 +20,29 @@ register_db_routes(
     model=LotModel,
     create_schema=LotCreateSchema,
     update_schema=LotUpdateSchema,
-    out_schema=LotOutSchema
+    out_schema=LotOutSchema,
+    omit=[RouteType.get_all]
 )
 
 
 @cbv(router)
 class LotAPI:
     db: Session = Depends(get_db)
+
+    @router.get(
+        '/',
+        response_model=list[LotOutSchema],
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
+    def get_all_lots(
+            self,
+            skip: int = Query(default=0, ge=0),
+            limit: int | None = Query(default=100, ge=0),
+            unassigned: bool = False
+    ):
+        return LotService(self.db).get_all(
+            skip=skip,
+            limit=limit,
+            filters={'fk_sector_id': None} if unassigned else None)
 
     @router.put(
         '/{lot_id}/assign/{sector_id}',
