@@ -8,6 +8,7 @@ import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
 import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
+import LabelIcon from "@mui/icons-material/Label";
 
 export const items = [
   {
@@ -38,6 +39,17 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <UsersIcon />
+      </SvgIcon>
+    ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
+  },
+  {
+    title: "Labels",
+    path: "/labels",
+    icon: (
+      <SvgIcon fontSize="small">
+        <LabelIcon />
       </SvgIcon>
     ),
     showInSideNav: true,

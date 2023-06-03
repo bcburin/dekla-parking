@@ -16,7 +16,7 @@ const ConfirmationModal = ({ open, onClose, onConfirm, title, content }) => {
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={onConfirm} variant="contained" color="error">
-          Confirm Delete
+          Confirm
         </Button>
       </DialogActions>
     </Dialog>
