@@ -23,12 +23,16 @@ import lotsAPI from "src/api/lots";
 import sectorAPI from "src/api/sectors";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import CreateSectorModal from "src/components/sector/create-sector-modal";
+import UnassignedLotsCard from "src/components/sector/unassigned-lots-card";
 
 const Page = () => {
   const dispatch = useDispatch();
   const [sectors, setSectors] = useState([]);
   const [createSectorModalIsOpen, setCreateSectorModalIsOpen] = useState(false);
-  const lotUIState = useSelector((state) => state.lotUI);
+  const lotUIState = useSelector((store) => store.lotUI);
+  const loggedUserIsAdmin = useSelector(
+    (store) => store.auth.loggedUser.isAdmin
+  );
 
   const getSectorsHandler = async () => {
     try {
@@ -108,6 +112,7 @@ const Page = () => {
               alignItems="center"
               sx={{ flexGrow: 1, width: "100%" }}
             >
+              {loggedUserIsAdmin && <UnassignedLotsCard key={-1} />}
               {sectors.map((sector) => (
                 <SectorCard
                   key={sector.id}

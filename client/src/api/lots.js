@@ -4,6 +4,12 @@ const baseLotUrl = `${baseRootUrl}/lots`;
 
 const lotsAPI = {
   ...createBaseAPI("lots"),
+  getUnassignedLots: async () => {
+    const response = await api.get(
+      `${baseLotUrl}/?skip=0&limit=100&unassigned=true`
+    );
+    return response.data;
+  },
   toggleOccupied: async (lotId) => {
     const response = await api.put(`${baseLotUrl}/${lotId}/toggle-occupied`);
     return response.data;
@@ -17,7 +23,10 @@ const lotsAPI = {
     return response.data;
   },
   bookForMe: async (lotId, bookTimes) => {
-    const response = await api.post(`${baseLotUrl}/${lotId}/book-for-me`, bookTimes);
+    const response = await api.post(
+      `${baseLotUrl}/${lotId}/book-for-me`,
+      bookTimes
+    );
     return response.data;
   },
 };
