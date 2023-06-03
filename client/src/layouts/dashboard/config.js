@@ -1,24 +1,36 @@
 import BookmarksRoundedIcon from "@mui/icons-material/BookmarksRounded";
-import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 import CogIcon from "@heroicons/react/24/solid/CogIcon";
 import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFilledRounded";
 import LockClosedIcon from "@heroicons/react/24/solid/LockClosedIcon";
-import ShoppingBagIcon from "@heroicons/react/24/solid/ShoppingBagIcon";
 import { SvgIcon } from "@mui/material";
 import UserIcon from "@heroicons/react/24/solid/UserIcon";
 import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
+import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 
 export const items = [
   {
-    title: "Parking Lots",
+    title: "Overview",
     path: "/",
+    icon: (
+      <SvgIcon fontSize="small">
+        <ChartBarIcon />
+      </SvgIcon>
+    ),
+    showInSideNav: false,
+    showOnlyToAdmins: false,
+  },
+  {
+    title: "Parking Lots",
+    path: "/sectors",
     icon: (
       <SvgIcon fontSize="small">
         <DirectionsCarFilledRoundedIcon />
       </SvgIcon>
     ),
+    showInSideNav: true,
+    showOnlyToAdmins: false,
   },
   {
     title: "Users",
@@ -28,6 +40,8 @@ export const items = [
         <UsersIcon />
       </SvgIcon>
     ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
   },
   {
     title: "Bookings",
@@ -37,6 +51,8 @@ export const items = [
         <BookmarksRoundedIcon />
       </SvgIcon>
     ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
   },
   {
     title: "Account",
@@ -46,6 +62,8 @@ export const items = [
         <UserIcon />
       </SvgIcon>
     ),
+    showInSideNav: true,
+    showOnlyToAdmins: false,
   },
   {
     title: "Settings",
@@ -55,6 +73,8 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     ),
+    showInSideNav: true,
+    showOnlyToAdmins: false,
   },
   {
     title: "Login",
@@ -64,6 +84,8 @@ export const items = [
         <LockClosedIcon />
       </SvgIcon>
     ),
+    showInSideNav: false,
+    showOnlyToAdmins: false,
   },
   {
     title: "Register",
@@ -73,6 +95,8 @@ export const items = [
         <UserPlusIcon />
       </SvgIcon>
     ),
+    showInSideNav: false,
+    showOnlyToAdmins: false,
   },
   {
     title: "Error",
@@ -82,5 +106,7 @@ export const items = [
         <XCircleIcon />
       </SvgIcon>
     ),
+    showInSideNav: false,
+    showOnlyToAdmins: false,
   },
 ];

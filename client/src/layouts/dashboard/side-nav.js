@@ -17,11 +17,16 @@ import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
 import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
+import { useSelector } from "react-redux";
 
 export const SideNav = (props) => {
   const { open, onClose } = props;
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const loggedUser = useSelector((store) => store.auth.loggedUser);
+
+  const userHasAccessToPage = (item) =>
+    !item.showOnlyToAdmins || loggedUser.isAdmin;
 
   const content = (
     <Scrollbar
@@ -101,15 +106,18 @@ export const SideNav = (props) => {
               const active = item.path ? pathname === item.path : false;
 
               return (
-                <SideNavItem
-                  active={active}
-                  disabled={item.disabled}
-                  external={item.external}
-                  icon={item.icon}
-                  key={item.title}
-                  path={item.path}
-                  title={item.title}
-                />
+                item.showInSideNav &&
+                userHasAccessToPage(item) && (
+                  <SideNavItem
+                    active={active}
+                    disabled={item.disabled}
+                    external={item.external}
+                    icon={item.icon}
+                    key={item.title}
+                    path={item.path}
+                    title={item.title}
+                  />
+                )
               );
             })}
           </Stack>
