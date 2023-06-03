@@ -15,8 +15,8 @@ class EpPermissionModel(BaseModel, IntervalModel):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_ep_id: Mapped[int] = mapped_column(ForeignKey('exclusive_policy.id'))
-    fk_label_id: Mapped[int] = mapped_column(ForeignKey('label.id'))
+    fk_ep_id: Mapped[int] = mapped_column(ForeignKey('exclusive_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
+    fk_label_id: Mapped[int] = mapped_column(ForeignKey('label.id', ondelete='CASCADE', onupdate='CASCADE'))
 
     # Relationships
     ep_permission_exclusive_policy: Mapped['ExclusivePolicyModel'] = relationship(

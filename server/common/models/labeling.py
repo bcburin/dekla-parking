@@ -15,8 +15,8 @@ class LabelingModel(BaseModel, IntervalModel):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    fk_label_id: Mapped[int] = mapped_column(ForeignKey('label.id'))
+    fk_user_id: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    fk_label_id: Mapped[int] = mapped_column(ForeignKey('label.id', ondelete='CASCADE', onupdate='CASCADE'))
 
     # Relationships
     labeled_user: Mapped['UserModel'] = relationship(back_populates='user_labelings', viewonly=True)

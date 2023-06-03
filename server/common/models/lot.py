@@ -21,7 +21,8 @@ class LotModel(BaseModel):
     description: Mapped[str] = mapped_column(nullable=True)
     occupied: Mapped[bool] = mapped_column()
     available: Mapped[bool] = mapped_column()
-    fk_sector_id: Mapped[int | None] = mapped_column(ForeignKey('sector.id'), nullable=True)
+    fk_sector_id: Mapped[int | None] = mapped_column(
+        ForeignKey('sector.id', ondelete='SET NULL', onupdate='CASCADE'), nullable=True)
 
     # Relationships
     lot_users: Mapped[list['UserModel']] = relationship(
