@@ -71,7 +71,7 @@ const LotCard = ({ receivedLot }) => {
             </Avatar>
           }
           action={
-            <IconButton aria-label="options" onMouseEnter={handleMenuOpen}>
+            <IconButton aria-label="options" onClick={handleMenuOpen}>
               <MoreVertIcon />
             </IconButton>
           }
