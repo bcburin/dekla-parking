@@ -7,6 +7,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Stack, SvgIcon, useTheme } from "@mui/material";
@@ -99,25 +100,34 @@ const LotCard = ({ receivedLot }) => {
           </Stack>
         </CardContent>
         <CardActions>
-          <IconButton
-            aria-label="view"
-            onClick={() => dispatch(actions.openShowLotModal({ lot }))}
-          >
-            <InfoRoundedIcon />
-          </IconButton>
-          <IconButton
-            aria-label="book-lot"
-            onClick={() => dispatch(actions.openBookLotModal({ lot }))}
-          >
-            <BookmarksRoundedIcon />
-          </IconButton>
-
-          <IconButton
-            aria-label="toggle-occupied"
-            onClick={toggleLotOccupiedHandler}
-          >
-            {lot.occupied ? <ToggleOffRoundedIcon /> : <ToggleOnRoundedIcon />}
-          </IconButton>
+          <Tooltip title="Information">
+            <IconButton
+              aria-label="view"
+              onClick={() => dispatch(actions.openShowLotModal({ lot }))}
+            >
+              <InfoRoundedIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Book Parking Lot">
+            <IconButton
+              aria-label="book-lot"
+              onClick={() => dispatch(actions.openBookLotModal({ lot }))}
+            >
+              <BookmarksRoundedIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Toggle Occupied">
+            <IconButton
+              aria-label="toggle-occupied"
+              onClick={toggleLotOccupiedHandler}
+            >
+              {lot.occupied ? (
+                <ToggleOffRoundedIcon />
+              ) : (
+                <ToggleOnRoundedIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         </CardActions>
       </Card>
       <Menu
@@ -131,7 +141,7 @@ const LotCard = ({ receivedLot }) => {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem title="Delete">
           <IconButton
             aria-label="delete"
             onClick={() => dispatch(actions.openDeleteLotModal({ lot }))}
@@ -139,7 +149,7 @@ const LotCard = ({ receivedLot }) => {
             <DeleteRoundedIcon />
           </IconButton>
         </MenuItem>
-        <MenuItem>
+        <MenuItem title="Assign to Sector">
           <IconButton
             aria-label="assign"
             onClick={() => dispatch(actions.openAssignLotModal({ lot }))}
@@ -147,7 +157,7 @@ const LotCard = ({ receivedLot }) => {
             <ArrowCircleRightRoundedIcon />
           </IconButton>
         </MenuItem>
-        <MenuItem>
+        <MenuItem title="Edit">
           <IconButton
             aria-label="edit"
             onClick={() => dispatch(actions.openEditLotModal({ lot }))}
