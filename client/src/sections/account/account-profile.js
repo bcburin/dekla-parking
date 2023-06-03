@@ -6,64 +6,41 @@ import {
   CardActions,
   CardContent,
   Divider,
-  Typography
-} from '@mui/material';
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { useSelector } from "react-redux";
 
-const user = {
-  avatar: '/assets/avatars/avatar-anika-visser.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Anika Visser',
-  timezone: 'GTM-7'
-};
+export const AccountProfile = () => {
+  const loggedUser = useSelector((store) => store.auth.loggedUser);
+  const theme = useTheme();
 
-export const AccountProfile = () => (
-  <Card>
-    <CardContent>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Avatar
-          src={user.avatar}
+  return (
+    <Card>
+      <CardContent>
+        <Box
           sx={{
-            height: 80,
-            mb: 2,
-            width: 80
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
-        />
-        <Typography
-          gutterBottom
-          variant="h5"
         >
-          {user.name}
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          {user.city} {user.country}
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          {user.timezone}
-        </Typography>
-      </Box>
-    </CardContent>
-    <Divider />
-    <CardActions>
-      <Button
-        fullWidth
-        variant="text"
-      >
-        Upload picture
-      </Button>
-    </CardActions>
-  </Card>
-);
+          <Avatar
+            sx={{
+              height: 200,
+              mb: 2,
+              width: 200,
+              fontSize: 64,
+              bgcolor: theme.palette.primary.dark,
+            }}
+          >
+            {loggedUser.firstName.charAt(0) + loggedUser.lastName.charAt(0)}
+          </Avatar>
+          <Typography gutterBottom variant="h5">
+            {`${loggedUser.firstName} ${loggedUser.lastName}`}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
