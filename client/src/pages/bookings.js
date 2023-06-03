@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import ActionsToolbar from "src/components/actions-toolbar";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Head from "next/head";
-import ShowUserModal from "src/components/show-user-modal";
+import ShowUserModal from "src/components/user/show-user-modal";
 import ThumbDownRoundedIcon from "@mui/icons-material/ThumbDownRounded";
 import ThumbUpRoundedIcon from "@mui/icons-material/ThumbUpRounded";
 import bookingsAPI from "src/api/bookings";

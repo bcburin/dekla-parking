@@ -9,15 +9,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-import BookLotModal from "src/components/sector/book-lot-modal";
+import BookLotModal from "src/components/lots/book-lot-modal";
 import CachedRoundedIcon from "@mui/icons-material/CachedRounded";
 import ConfirmationModal from "src/components/confirmation-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Head from "next/head";
-import ReassignLotModal from "src/components/sector/reassign-lot-modal";
+import ReassignLotModal from "src/components/lots/reassign-lot-modal";
 import SectorCard from "src/components/sector/sector-card";
-import ShowLotModal from "src/components/sector/show-lot-modal";
-import UpdateLotModal from "src/components/sector/update-lot-modal";
+import ShowLotModal from "src/components/lots/show-lot-modal";
+import UpdateLotModal from "src/components/lots/update-lot-modal";
 import { actions } from "src/store/lot-ui-slice";
 import lotsAPI from "src/api/lots";
 import sectorAPI from "src/api/sectors";

@@ -12,17 +12,8 @@ import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
 
 export const items = [
   {
-    title: "Overview",
-    path: "/",
-    icon: (
-      <SvgIcon fontSize="small">
-        <ChartBarIcon />
-      </SvgIcon>
-    ),
-  },
-  {
     title: "Parking Lots",
-    path: "/sectors",
+    path: "/",
     icon: (
       <SvgIcon fontSize="small">
         <DirectionsCarFilledRoundedIcon />

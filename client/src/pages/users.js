@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 
 import ActionsToolbar from "src/components/actions-toolbar";
 import ConfirmationModal from "src/components/confirmation-modal";
-import CreateUserModal from "src/components/create-user-modal";
+import CreateUserModal from "src/components/user/create-user-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Head from "next/head";
 import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
-import UpdateUserModal from "src/components/update-user-modal";
+import UpdateUserModal from "src/components/user/update-user-modal";
 import userAPI from "src/api/users";
 
 const Page = () => {
