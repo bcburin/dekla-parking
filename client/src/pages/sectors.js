@@ -65,8 +65,12 @@ const Page = () => {
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
-          <Stack direction="column" spacing={2} sx={{ marginBottom: "20px" }}>
+        <Container>
+          <Stack
+            direction="column"
+            spacing={2}
+            sx={{ marginBottom: "20px", height: "100%" }}
+          >
             <Stack
               direction="row"
               alignItems="center"
@@ -99,7 +103,11 @@ const Page = () => {
                 </Button>
               </Stack>
             </Stack>
-            <Stack spacing={2} alignItems="center">
+            <Stack
+              spacing={5}
+              alignItems="center"
+              sx={{ flexGrow: 1, width: "100%" }}
+            >
               {sectors.map((sector) => (
                 <SectorCard
                   key={sector.id}

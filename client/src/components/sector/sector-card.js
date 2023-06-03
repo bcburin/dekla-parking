@@ -47,6 +47,9 @@ const SectorCard = ({ sector, refreshSectors }) => {
           borderRadius: 4,
           padding: "24px",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+          flexGrow: 1,
+          // margin: "",
+          width: "100%",
         }}
       >
         <Box
