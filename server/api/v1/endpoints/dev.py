@@ -40,7 +40,7 @@ def generate_mock_data(req: GenerationRequest, db: Session = Depends(get_db)):
         n_sectors=len(sectors),
         n_lots=len(lots),
         n_bookings=len(bookings),
-        pp_policy=len(public_policy),
-        epolicy=len(exclusive_policy),
-        eppermission=len(ep_permission)
+        n_ppolicy=len(public_policy),
+        n_epolicy=len(exclusive_policy),
+        n_eppermission=len(ep_permission)
     )
