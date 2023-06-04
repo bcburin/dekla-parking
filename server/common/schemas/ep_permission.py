@@ -8,8 +8,8 @@ from server.common.schemas.exclusive_policy import ExclusivePolicyOutSchema
 
 
 class EpPermissionBaseSchema(APIModel):
-    start_time: datetime
-    end_time: datetime
+    start_time: datetime | None = None
+    end_time: datetime | None = None
 
 
 class EpPermissionCreateSchema(EpPermissionBaseSchema):

@@ -19,7 +19,6 @@ class EpPermissionService(BaseDbService[EpPermissionModel, EpPermissionCreateSch
         self.db = db
         super().__init__(db=db, db_manager=EpPermissionDbManager)
 
-
     def generate_mock_data(self, n: int, /) -> list[EpPermissionModel]:
         if n == 0:
             return []
@@ -35,9 +34,9 @@ class EpPermissionService(BaseDbService[EpPermissionModel, EpPermissionCreateSch
             end_time = fake.date_time_between(
                 start_date=start_time + timedelta(hours=8),
                 end_date=start_time + timedelta(days=1))
-            ep_permission =EpPermissionCreateSchema(
-                start_time=start_time,
-                end_time=end_time,
+            ep_permission = EpPermissionCreateSchema(
+                start_time=choice([start_time, None]),
+                end_time=choice([end_time, None]),
                 fk_ep_id=db_policy.id,
                 fk_label_id=db_label.id
             )
