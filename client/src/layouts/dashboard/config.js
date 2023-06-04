@@ -67,6 +67,28 @@ export const items = [
     showOnlyToAdmins: true,
   },
   {
+    title: "Labelings",
+    path: "/labelings",
+    icon: (
+      <SvgIcon fontSize="small">
+        <BookmarksRoundedIcon />
+      </SvgIcon>
+    ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
+  },
+  {
+    title: "EpPermission",
+    path: "/ep_permission",
+    icon: (
+      <SvgIcon fontSize="small">
+        <BookmarksRoundedIcon />
+      </SvgIcon>
+    ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
+  },
+  {
     title: "Account",
     path: "/account",
     icon: (

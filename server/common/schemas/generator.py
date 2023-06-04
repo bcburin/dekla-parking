@@ -8,6 +8,9 @@ class GenerationRequest(APIModel):
     n_sectors: int = 0
     n_lots: int = 0
     n_bookings: int = 0
+    n_ppolicy: int = 0
+    n_epolicy: int = 0
+    n_eppermission: int = 0
 
 
 class GenerationResponse(APIModel):
@@ -17,3 +20,6 @@ class GenerationResponse(APIModel):
     n_sectors: int = 0
     n_lots: int = 0
     n_bookings: int = 0
+    n_ppolicy: int = 0
+    n_epolicy: int = 0
+    n_eppermission: int = 0
