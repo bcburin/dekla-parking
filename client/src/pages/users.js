@@ -174,7 +174,7 @@ const Page = () => {
 
       <ConfirmationModal
         open={deleteModalState.isOpen}
-        onClose={() => ({ isOpen: false, user: null })}
+        onClose={() => setDeleteModalState({ isOpen: false, user: null })}
         onConfirm={deleteUserHandler(deleteModalState.user?.id)}
         title="Delete User"
         content="Are you sure you want to delete this user?"
