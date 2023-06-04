@@ -6,6 +6,7 @@ from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
 from server.common.schemas.label import LabelOutSchema
 from server.common.schemas.exclusive_policy import ExclusivePolicyOutSchema
 
+
 class EpPermissionBaseSchema(APIModel):
     start_time: datetime
     end_time: datetime
@@ -22,7 +23,9 @@ class EpPermissionUpdateSchema(EpPermissionBaseSchema, BaseUpdateSchema):
 
 
 class EpPermissionOutSchema(EpPermissionBaseSchema, BaseOutSchema):
-    ep_permission_label = LabelOutSchema
-    ep_permission_ep = ExclusivePolicyOutSchema
+    id: int
+    ep_permission_label: LabelOutSchema
+    ep_permission_exclusive_policy: ExclusivePolicyOutSchema
+
     class Config:
         orm_mode = True
