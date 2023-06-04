@@ -37,7 +37,7 @@ const LabelCard = ({ receivedLabel, onUpdate }) => {
     }
   };
 
-  const getColor = () => "#" + label?.color || theme.palette.primary.main;
+  const getColor = () => label?.color || theme.palette.primary.main;
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
