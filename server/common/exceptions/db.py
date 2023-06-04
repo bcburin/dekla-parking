@@ -26,7 +26,7 @@ class NotFoundDbException(DbException):
 
 class AlreadyExistsDbException(DbException):
 
-    def __init__(self, origin: str, repeated_attribute: str, repeated_value: Any):
+    def __init__(self, origin: str, repeated_attribute: str | None = None, repeated_value: Any = None):
         super().__init__(origin=origin)
         self.repeated_attribute = repeated_attribute
         self.repeated_value = repeated_value
@@ -35,7 +35,9 @@ class AlreadyExistsDbException(DbException):
         return HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail=f'There is already an entry for {self.origin} with {self.repeated_attribute} as '
-                   f'{self.repeated_value}')
+                   f'{self.repeated_value}'
+                   if self.repeated_attribute else
+                   f'There is already such an entry for {self.origin}')
 
 
 class NoUpdatesProvidedDbException(DbException):

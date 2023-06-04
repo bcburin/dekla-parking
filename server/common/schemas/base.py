@@ -10,6 +10,11 @@ class BaseOutSchema(APIModel):
     updated_at: datetime
 
 
+class IntervalSchema(APIModel):
+    start_time: datetime | None = None
+    end_time: datetime | None = None
+
+
 class BaseUpdateSchema:
 
     def has_updates(self):
