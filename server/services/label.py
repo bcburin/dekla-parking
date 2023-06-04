@@ -1,5 +1,6 @@
 from random import randint
 
+from faker import Faker
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -17,14 +18,15 @@ class LabelService(BaseDbService[LabelModel, LabelCreateSchema, LabelUpdateSchem
         super().__init__(db=db, db_manager=LabelDbManager)
 
     def generate_mock_data(self, n: int, /) -> list[LabelModel]:
+        fake = Faker()
         created_labels = []
         for _ in range(n):
-            name = 'Label ' + str(randint(1, 1_000_000))
-            color = "%06x" % randint(0, 0xFFFFFF)
+            name = fake.word().capitalize()
+            color = fake.color()
             priority = randint(0, 100)
             label = LabelCreateSchema(
                 name=name,
-                description='Description of ' + name + '.',
+                description=fake.sentence(nb_words=50, variable_nb_words=True),
                 priority=priority,
                 color=color
             )

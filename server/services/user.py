@@ -1,3 +1,5 @@
+from random import choice
+
 from faker import Faker
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
@@ -93,8 +95,8 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema], 
         for _ in range(n):
             first_name: str = fake.first_name()
             last_name: str = fake.last_name()
-            username = (first_name[0:2] + last_name[0:4]).lower()
-            email = EmailStr(username + '@dom.com')
+            username = (first_name[0:2] + last_name[0:4]).lower() + str(choice(range(0, 100)))
+            email = EmailStr(username + '@example.com')
             user = UserCreateSchema(
                 username=username,
                 email=email,

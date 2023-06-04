@@ -1,5 +1,6 @@
 from random import randint
 
+from faker import Faker
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -17,10 +18,13 @@ class SectorService(BaseDbService[SectorModel, SectorCreateSchema, SectorUpdateS
         super().__init__(db=db, db_manager=SectorDbManager)
 
     def generate_mock_data(self, n: int, /) -> list[SectorModel]:
+        fake = Faker()
         created_sectors = []
         for _ in range(n):
-            name = 'Sector ' + str(randint(1, 1_000_000))
-            sector = SectorCreateSchema(name=name, description='Description of ' + name + '.')
+            sector = SectorCreateSchema(
+                name=fake.word().capitalize(),
+                description=fake.sentence(nb_words=50, variable_nb_words=True)
+            )
             try:
                 created_sector = self.create(obj=sector)
                 created_sectors.append(created_sector)

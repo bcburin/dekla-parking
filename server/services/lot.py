@@ -1,6 +1,7 @@
 from random import randint, choice
 from string import ascii_uppercase
 
+from faker import Faker
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -38,13 +39,21 @@ class LotService(BaseDbService[LotModel, LotCreateSchema, LotUpdateSchema], IMoc
         return self.db_manager.update(db_obj=db_lot, obj=updates)
 
     def generate_mock_data(self, n: int, /) -> list[LotModel]:
+        fake = Faker()
         created_lots = []
         db_sectors = SectorDbManager(self.db).get_all(limit=10)
         for _ in range(n):
-            db_setor = choice(db_sectors)
-            name = 'Lot ' + str(randint(1, 1_000_000))
-            location = choice(ascii_uppercase)
-            lot = LotCreateSchema(name=name, location=location, fk_sector_id=db_setor.id)
+            db_sector = choice(db_sectors)
+            location = choice(ascii_uppercase) + choice(ascii_uppercase)
+            name = location + str(randint(1_000, 10_000))
+            lot = LotCreateSchema(
+                name=name,
+                location=location,
+                fk_sector_id=db_sector.id,
+                description=fake.sentence(nb_words=50, variable_nb_words=True),
+                occupied=fake.boolean(chance_of_getting_true=15),
+                available=fake.boolean(chance_of_getting_true=90)
+            )
             try:
                 created_lot = self.create(obj=lot)
                 created_lots.append(created_lot)
