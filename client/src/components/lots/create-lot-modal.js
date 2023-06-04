@@ -1,11 +1,11 @@
 import * as Yup from "yup";
 
 import {
+  Checkbox,
+  FormControlLabel,
   Stack,
   TextField,
   Typography,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 
 import Button from "@mui/material/Button";
@@ -13,8 +13,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useFormik } from "formik";
 import lotsAPI from "src/api/lots";
+import { useFormik } from "formik";
 
 const CreateLotModal = ({ open, onClose, onConfirm, onRefresh, sector }) => {
   const formik = useFormik({
@@ -58,7 +58,7 @@ const CreateLotModal = ({ open, onClose, onConfirm, onRefresh, sector }) => {
               name="name"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.firstName}
+              value={formik.values.name}
             />
             <TextField
               error={!!(formik.touched.location && formik.errors.location)}
@@ -73,16 +73,20 @@ const CreateLotModal = ({ open, onClose, onConfirm, onRefresh, sector }) => {
               value={formik.values.location}
             />
             <TextField
-              error={!!(formik.touched.email && formik.errors.email)}
+              error={
+                !!(formik.touched.description && formik.errors.description)
+              }
               fullWidth
               multiline
               rows={4}
-              helperText={formik.touched.email && formik.errors.email}
+              helperText={
+                formik.touched.description && formik.errors.description
+              }
               label="Description"
               name="description"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.email}
+              value={formik.values.description}
             />
             <FormControlLabel
               control={

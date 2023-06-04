@@ -1,11 +1,11 @@
 import * as Yup from "yup";
 
 import {
+  Checkbox,
+  FormControlLabel,
   Stack,
   TextField,
   Typography,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 
 import Button from "@mui/material/Button";
@@ -13,8 +13,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useFormik } from "formik";
 import sectorAPI from "src/api/sectors";
+import { useFormik } from "formik";
 
 const CreateSectorModal = ({ open, onClose, onConfirm, onRefresh }) => {
   const formik = useFormik({
@@ -58,16 +58,16 @@ const CreateSectorModal = ({ open, onClose, onConfirm, onRefresh }) => {
               value={formik.values.firstName}
             />
             <TextField
-              error={!!(formik.touched.email && formik.errors.email)}
+              error={!!(formik.touched.description && formik.errors.description)}
               fullWidth
               multiline
               rows={4}
-              helperText={formik.touched.email && formik.errors.email}
+              helperText={formik.touched.description && formik.errors.description}
               label="Description"
               name="description"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.email}
+              value={formik.values.description}
             />
             <FormControlLabel
               control={
