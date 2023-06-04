@@ -2,20 +2,21 @@ import {
   Box,
   Button,
   Container,
+  Grid,
   Stack,
   SvgIcon,
   Typography,
   useTheme,
-  Grid,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import CachedRoundedIcon from "@mui/icons-material/CachedRounded";
+import CreateLabelModal from "src/components/label/create-label-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Head from "next/head";
-import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
-import labelsAPI from "src/api/labels";
 import LabelCard from "src/components/label/label-card";
+import labelsAPI from "src/api/labels";
 
 const Page = () => {
   const theme = useTheme();
@@ -116,6 +117,17 @@ const Page = () => {
           </Stack>
         </Container>
       </Box>
+      {createLabelModalIsOpen && (
+        <CreateLabelModal
+          key={0}
+          open={createLabelModalIsOpen}
+          onClose={() => setCreateLabelModalIsOpen(false)}
+          onConfirm={async () => {
+            setCreateLabelModalIsOpen(false);
+            await getLabelsHandler();
+          }}
+        />
+      )}
     </>
   );
 };

@@ -13,12 +13,15 @@ import React, { useEffect, useState } from "react";
 import { Stack, SvgIcon, useTheme } from "@mui/material";
 
 import ArrowCircleRightRoundedIcon from "@mui/icons-material/ArrowCircleRightRounded";
+import AssignLabelModal from "./assing-label-modal";
+import ConfirmationModal from "../confirmation-modal";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import LabelIcon from "@mui/icons-material/Label";
-import ConfirmationModal from "../confirmation-modal";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ShowLabelModal from "./show-lable-modal";
+import UpdateLabelModal from "./update-label-modal";
 import labelsAPI from "src/api/labels";
 
 const LabelCard = ({ receivedLabel, onUpdate }) => {
@@ -26,6 +29,9 @@ const LabelCard = ({ receivedLabel, onUpdate }) => {
   const [label, setLabel] = useState(receivedLabel);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteLabelModalIsOpen, setDeleteLabelModalIsOpen] = useState(false);
+  const [showLabelModalIsOpen, setShowLabelModalIsOpen] = useState(false);
+  const [assignLabelModalIsOpen, setAssignLabelModalIsOpen] = useState(false);
+  const [updateLabelModalIsOpen, setUpdateLabelModalIsOpen] = useState(false);
   let closeTimeout;
 
   const handleDeleteLabel = async () => {
@@ -54,8 +60,6 @@ const LabelCard = ({ receivedLabel, onUpdate }) => {
       clearTimeout(closeTimeout); // Cleanup the timeout on component unmount
     };
   }, []);
-
-  console.log(label);
 
   return (
     label && (
@@ -110,7 +114,10 @@ const LabelCard = ({ receivedLabel, onUpdate }) => {
           </CardContent>
           <CardActions>
             <Tooltip title="Information">
-              <IconButton aria-label="view" onClick={() => {}}>
+              <IconButton
+                aria-label="view"
+                onClick={() => setShowLabelModalIsOpen(true)}
+              >
                 <InfoRoundedIcon />
               </IconButton>
             </Tooltip>
@@ -136,23 +143,55 @@ const LabelCard = ({ receivedLabel, onUpdate }) => {
             </IconButton>
           </MenuItem>
           <MenuItem title="Assign to User">
-            <IconButton aria-label="assign" onClick={() => {}}>
+            <IconButton
+              aria-label="assign"
+              onClick={() => setAssignLabelModalIsOpen(true)}
+            >
               <ArrowCircleRightRoundedIcon />
             </IconButton>
           </MenuItem>
           <MenuItem title="Edit">
-            <IconButton aria-label="edit" onClick={() => {}}>
+            <IconButton
+              aria-label="edit"
+              onClick={() => setUpdateLabelModalIsOpen(true)}
+            >
               <EditRoundedIcon />
             </IconButton>
           </MenuItem>
         </Menu>
-        {label && (
+        {deleteLabelModalIsOpen && label && (
           <ConfirmationModal
             open={deleteLabelModalIsOpen}
             onClose={() => setDeleteLabelModalIsOpen(false)}
             onConfirm={handleDeleteLabel}
             title="Delete Label"
             content={`Are you sure you want to delete label "${label.name}"`}
+          />
+        )}
+        {showLabelModalIsOpen && label && (
+          <ShowLabelModal
+            label={label}
+            open={showLabelModalIsOpen}
+            onClose={() => setShowLabelModalIsOpen(false)}
+          />
+        )}
+        {assignLabelModalIsOpen && label && (
+          <AssignLabelModal
+            label={label}
+            open={assignLabelModalIsOpen}
+            onClose={() => setAssignLabelModalIsOpen(false)}
+            onConfirm={() => setAssignLabelModalIsOpen(false)}
+          />
+        )}
+        {updateLabelModalIsOpen && label && (
+          <UpdateLabelModal
+            label={label}
+            open={updateLabelModalIsOpen}
+            onClose={() => setUpdateLabelModalIsOpen(false)}
+            onConfirm={(updatedLabel) => {
+              setUpdateLabelModalIsOpen(false);
+              if (updatedLabel) setLabel(updatedLabel);
+            }}
           />
         )}
       </>
