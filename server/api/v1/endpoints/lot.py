@@ -74,7 +74,7 @@ class LotAPI:
         dependencies=[Depends(AuthReq.current_user_is_authenticated)])
     def book_lot_for_me(self, lot_id, current_user: CurrentUser, booking_times: BookingCreateForUserAndLotSchema):
         booking = BookingCreateSchema(
-            status=BookingStatusType.Pending,
+            status=BookingStatusType.Pending if not current_user.is_admin else BookingStatusType.Approved,
             start_time=booking_times.start_time,
             end_time=booking_times.end_time,
             fk_user_id=current_user.id,
