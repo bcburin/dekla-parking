@@ -14,6 +14,7 @@ class UserBaseSchema(APIModel):
 
 class UserCreateSchema(UserBaseSchema):
     password: str
+    is_admin: bool = False
 
 
 class UserUpdateSchema(UserBaseSchema, BaseUpdateSchema):

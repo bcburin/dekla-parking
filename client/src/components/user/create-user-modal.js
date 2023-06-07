@@ -14,6 +14,7 @@ const CreateUserModal = ({ open, onClose, onConfirm, title }) => {
   const formik = useFormik({
     initialValues: {
       email: "",
+      username: "",
       firstName: "",
       lastName: "",
       password: "",
@@ -24,6 +25,7 @@ const CreateUserModal = ({ open, onClose, onConfirm, title }) => {
         .email("Must be a valid email")
         .max(255)
         .required("Email is required"),
+      username: Yup.string().max(255).required("Username is required"),
       firstName: Yup.string().max(255).required("First name is required"),
       lastName: Yup.string().max(255).required("Last name is required"),
       password: Yup.string().max(255).required("Password is required"),
@@ -74,6 +76,16 @@ const CreateUserModal = ({ open, onClose, onConfirm, title }) => {
               onChange={formik.handleChange}
               type="email"
               value={formik.values.email}
+            />
+            <TextField
+              error={!!(formik.touched.username && formik.errors.username)}
+              fullWidth
+              helperText={formik.touched.username && formik.errors.username}
+              label="Username"
+              name="username"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.username}
             />
             <TextField
               error={!!(formik.touched.password && formik.errors.password)}

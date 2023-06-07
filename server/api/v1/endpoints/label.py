@@ -8,6 +8,7 @@ from server.common.schemas.base import IntervalSchema
 from server.common.schemas.labeling import LabelingOutSchema
 from server.database.config import get_db
 from server.common.schemas.label import LabelOutSchema, LabelCreateSchema, LabelUpdateSchema
+from server.services.auth import AuthReq
 from server.services.label import LabelService
 
 router = APIRouter(prefix='/labels', tags=['labels'])
@@ -32,7 +33,7 @@ class LabelAPI:
         db_label = LabelService(self.db).get_by_unique_attribute(name, 'name')
         return db_label
 
-    @router.post(path='/{label_id}/assign-to/{user_id}', response_model=LabelingOutSchema)
+    @router.post(path='/{label_id}/assign-to/{user_id}', response_model=LabelingOutSchema, dependencies=[Depends(AuthReq.current_user_has_permission)])
     def assign_label_to_user(self, label_id: int, user_id: int, labeling_times: IntervalSchema | None = None):
         return LabelService(self.db).assign_label_to_user(
             label_id=label_id,

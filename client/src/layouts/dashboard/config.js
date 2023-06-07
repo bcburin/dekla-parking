@@ -89,6 +89,28 @@ export const items = [
     showOnlyToAdmins: true,
   },
   {
+    title: "PublicPolicies",
+    path: "/public_policy",
+    icon: (
+      <SvgIcon fontSize="small">
+        <BookmarksRoundedIcon />
+      </SvgIcon>
+    ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
+  },
+  {
+    title: "ExclusivePolicies",
+    path: "/exclusive_policy",
+    icon: (
+      <SvgIcon fontSize="small">
+        <BookmarksRoundedIcon />
+      </SvgIcon>
+    ),
+    showInSideNav: true,
+    showOnlyToAdmins: true,
+  },
+  {
     title: "Account",
     path: "/account",
     icon: (
