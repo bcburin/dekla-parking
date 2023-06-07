@@ -54,8 +54,18 @@ const Page = () => {
   });
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "startTime", headerName: "Start Time", width: 150 },
-    { field: "endTime", headerName: "End Time", width: 150 },
+    {
+      field: "startTime",
+      headerName: "Start Time",
+      width: 150,
+      valueGetter: ({ value }) => (value && new Date(value)) || "No start date",
+    },
+    {
+      field: "endTime",
+      headerName: "End Time",
+      width: 150,
+      valueGetter: ({ value }) => (value && new Date(value)) || "No end date",
+    },
     {
       field: "createdAt",
       headerName: "Creation",
@@ -71,11 +81,10 @@ const Page = () => {
       valueGetter: ({ value }) => value && new Date(value),
     },
     {
-        field: "exclusivePolicyId",
-        headerName: "Exclusive Policy ID",
+      field: "exclusivePolicyId",
+      headerName: "Exclusive Policy ID",
       width: 90,
       valueGetter: (params) => {
-        console.log(params.row)
         return `${params.row.epPermissionExclusivePolicy?.id || ""}`;
       },
     },
@@ -84,8 +93,7 @@ const Page = () => {
       headerName: "Label ID",
       width: 90,
       valueGetter: (params) => {
-        console.log(params.row)
-        return `${params.row. epPermissionLabel?.id || ""}`;
+        return `${params.row.epPermissionLabel?.id || ""}`;
       },
     },
     {
@@ -96,7 +104,9 @@ const Page = () => {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => setDeleteModalState({ epPermission: params, isOpen: true })}
+          onClick={() =>
+            setDeleteModalState({ epPermission: params, isOpen: true })
+          }
         />,
       ],
     },
@@ -126,6 +136,7 @@ const Page = () => {
                     components={{ Toolbar: ActionsToolbar }}
                     componentsProps={{
                       toolbar: {
+                        onRefreshClick: getEpPermissionsHandler,
                         onDeleteClick: () => setDeleteManyModalIsOpen(true),
                         deleteIsDisabled: selectedRows.length == 0,
                       },
@@ -140,20 +151,24 @@ const Page = () => {
           </Stack>
         </Container>
         <ConfirmationModal
-        open={deleteModalState.isOpen}
-        onClose={() => setDeleteModalState({ isOpen: false, epPermission: null })}
-        onConfirm={deleteEpPermissionHandler(deleteModalState.epPermission?.id)}
-        title="Delete Ep permission"
-        content="Are you sure you want to delete this Ep permission?"
-      />
+          open={deleteModalState.isOpen}
+          onClose={() =>
+            setDeleteModalState({ isOpen: false, epPermission: null })
+          }
+          onConfirm={deleteEpPermissionHandler(
+            deleteModalState.epPermission?.id
+          )}
+          title="Delete Ep permission"
+          content="Are you sure you want to delete this Ep permission?"
+        />
 
-      <ConfirmationModal
-        open={deleteManyModelIsOpen}
-        onClose={() => setDeleteManyModalIsOpen(false)}
-        onConfirm={deleteManyEpPermissionHandler}
-        title="Delete Ep permissions"
-        content="Are you sure you want to delete these Ep permissions?"
-      />
+        <ConfirmationModal
+          open={deleteManyModelIsOpen}
+          onClose={() => setDeleteManyModalIsOpen(false)}
+          onConfirm={deleteManyEpPermissionHandler}
+          title="Delete Ep permissions"
+          content="Are you sure you want to delete these Ep permissions?"
+        />
       </Box>
     </>
   );
