@@ -5,12 +5,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from server.common.exceptions.db import AlreadyExistsDbException
+from server.common.models.ep_permission import EpPermissionModel
 from server.common.models.label import LabelModel
 from server.common.models.labeling import LabelingModel
 from server.common.schemas.base import IntervalSchema
 from server.common.schemas.label import LabelCreateSchema, LabelUpdateSchema
 from server.common.schemas.labeling import LabelingCreateSchema
-from server.common.utils import IMockDataGenerator
+from server.common.utils import IMockDataGenerator, get_is_active
 from server.database.label import LabelDbManager
 from server.database.labeling import LabelingDbManager
 from server.services.dbservice import BaseDbService
@@ -42,6 +43,11 @@ class LabelService(BaseDbService[LabelModel, LabelCreateSchema, LabelUpdateSchem
             labeling.end_time = labeling_times.end_time
         created_labeling = LabelingDbManager(self.db).create(obj=labeling)
         return created_labeling
+
+    def get_active_ep_permissions(self, label_id: int) -> set[EpPermissionModel]:
+        db_label: LabelModel = self.get_by_id(label_id)
+        ep_permissions = db_label.label_ep_permissions
+        return set([ep_permission for ep_permission in ep_permissions if get_is_active(obj=ep_permission)])
 
     def generate_mock_data(self, n: int, /) -> list[LabelModel]:
         fake = Faker()
