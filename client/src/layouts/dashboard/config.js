@@ -90,7 +90,7 @@ export const items = [
   },
   {
     title: "PublicPolicies",
-    path: "/public_policies",
+    path: "/public_policy",
     icon: (
       <SvgIcon fontSize="small">
         <BookmarksRoundedIcon />
@@ -101,7 +101,7 @@ export const items = [
   },
   {
     title: "ExclusivePolicies",
-    path: "/exclusive_policies",
+    path: "/exclusive_policy",
     icon: (
       <SvgIcon fontSize="small">
         <BookmarksRoundedIcon />
