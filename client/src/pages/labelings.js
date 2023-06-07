@@ -54,8 +54,18 @@ const Page = () => {
   });
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "start_time", headerName: "Start Time", width: 150 },
-    { field: "end_time", headerName: "End Time", width: 150 },
+    {
+      field: "startTime",
+      headerName: "Start Time",
+      width: 150,
+      valueGetter: ({ value }) => (value && new Date(value)) || "No start date",
+    },
+    {
+      field: "endTime",
+      headerName: "End Time",
+      width: 150,
+      valueGetter: ({ value }) => (value && new Date(value)) || "No end date",
+    },
     {
       field: "createdAt",
       headerName: "Creation",
@@ -94,7 +104,9 @@ const Page = () => {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => setDeleteModalState({ labeling: params, isOpen: true })}
+          onClick={() =>
+            setDeleteModalState({ labeling: params, isOpen: true })
+          }
         />,
       ],
     },
@@ -124,6 +136,7 @@ const Page = () => {
                     components={{ Toolbar: ActionsToolbar }}
                     componentsProps={{
                       toolbar: {
+                        onRefreshClick: getLabelingsHandler,
                         onDeleteClick: () => setDeleteManyModalIsOpen(true),
                         deleteIsDisabled: selectedRows.length == 0,
                       },
