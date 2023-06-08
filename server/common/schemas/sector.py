@@ -6,7 +6,7 @@ from server.common.schemas.lot import LotOutSchema
 
 class SectorBaseSchema(APIModel):
     name: str
-    description: str
+    description: str | None = None
     available: bool = True
     fk_pp_id: int | None = None
     fk_ep_id: int | None = None
