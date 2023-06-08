@@ -1,6 +1,7 @@
 from random import choice
 
 from faker import Faker
+from fastapi.logger import logger
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -16,6 +17,7 @@ from server.common.schemas.labeling import LabelingCreateSchema, LabelingCreateF
 from server.common.schemas.base import ActivityRequestType
 from server.common.schemas.user import UserCreateSchema, UserUpdateSchema
 from server.common.utils import get_is_active, get_is_expired, IMockDataGenerator
+from server.database.config import get_db
 from server.database.labeling import LabelingDbManager
 from server.database.user import UserDbManager
 from server.database.booking import BookingDbManager
@@ -112,3 +114,20 @@ class UserService(BaseDbService[UserModel, UserCreateSchema, UserUpdateSchema], 
                 self.db.rollback()
                 continue
         return created_users
+
+    @staticmethod
+    def task_create_admin_if_none_exists() -> None:
+        db = get_db().__next__()
+        admins = UserDbManager(db).get_all(filters={'is_admin': True})
+        if not admins:
+            logger.warning(f'{"WARNING:"}  Creating default admin since none were found. '
+                           'Delete it after creating a permanent one.')
+            admin = UserCreateSchema(
+                username='admin',
+                email=EmailStr('admin@example.com'),
+                first_name='Service',
+                last_name='Admin',
+                password='123',
+                is_admin=True
+            )
+            UserDbManager(db).create(obj=admin)

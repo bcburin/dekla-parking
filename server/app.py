@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from server.api.api import api
 from server.database.config import DBConfig
 from server.common.models.base import BaseModel
+from server.services.user import UserService
 
 
 def create_parser() -> ArgumentParser:
@@ -42,5 +43,7 @@ if __name__ == '__main__':
     update_environment_variables(arguments)
     # Create database and tables if they do not exist yet
     BaseModel.metadata.create_all(create_engine(DBConfig().get_uri()))
+    # Create admin user if none exists yet
+    UserService.task_create_admin_if_none_exists()
     # Run server
     uvicorn.run("server.app:api", host=arguments.host, port=int(arguments.port), reload=arguments.dev_mode)
