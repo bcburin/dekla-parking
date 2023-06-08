@@ -4,7 +4,7 @@ from enum import auto
 from fastapi_restful.api_model import APIModel
 from fastapi_restful.enums import CamelStrEnum
 
-from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema
+from server.common.schemas.base import BaseUpdateSchema, BaseOutSchema, IntervalSchema
 from server.common.schemas.user import UserOutSchema
 from server.common.schemas.lot import LotOutSchema
 
@@ -15,7 +15,7 @@ class BookingStatusType(CamelStrEnum):
     Rejected = auto()
 
 
-class BookingBaseSchema(APIModel):
+class BookingBaseSchema(IntervalSchema):
     status: BookingStatusType = BookingStatusType.Pending
     start_time: datetime
     end_time: datetime
