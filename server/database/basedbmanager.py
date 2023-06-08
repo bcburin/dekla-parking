@@ -37,7 +37,7 @@ class BaseDbManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         if filters:
             for col, val in filters.items():
                 if isinstance(val, set):
-                    query = query.filter(getattr(self.model, col) in val)
+                    query = query.filter(getattr(self.model, col).in_(val))
                 else:
                     query = query.filter(getattr(self.model, col) == val)
         if hasattr(self.model, order_by):
