@@ -81,19 +81,19 @@ const Page = () => {
       valueGetter: ({ value }) => value && new Date(value),
     },
     {
-      field: "exclusivePolicyId",
-      headerName: "Exclusive Policy ID",
+      field: "exclusivePolicy",
+      headerName: "Exclusive Policy",
       width: 90,
       valueGetter: (params) => {
-        return `${params.row.epPermissionExclusivePolicy?.id || ""}`;
+        return `${params.row.epPermissionExclusivePolicy?.name || ""}`;
       },
     },
     {
-      field: "labelId",
-      headerName: "Label ID",
+      field: "label",
+      headerName: "Label",
       width: 90,
       valueGetter: (params) => {
-        return `${params.row.epPermissionLabel?.id || ""}`;
+        return `${params.row.epPermissionLabel?.name || ""}`;
       },
     },
     {
@@ -115,7 +115,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Exclusive Policy permissions | Dekla Parking</title>
+        <title>Permissions | Dekla Parking</title>
       </Head>
       <Box
         component="main"
@@ -128,7 +128,9 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Ep permissions</Typography>
+                <Typography variant="h4">
+                  Exclusive Policy Permissions
+                </Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <DataGrid
                     rows={ep_permissions}

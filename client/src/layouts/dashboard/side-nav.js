@@ -1,8 +1,3 @@
-import NextLink from "next/link";
-import { usePathname } from "next/navigation";
-import PropTypes from "prop-types";
-import ArrowTopRightOnSquareIcon from "@heroicons/react/24/solid/ArrowTopRightOnSquareIcon";
-import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 import {
   Box,
   Button,
@@ -13,10 +8,16 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+
+import ArrowTopRightOnSquareIcon from "@heroicons/react/24/solid/ArrowTopRightOnSquareIcon";
+import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 import { Logo } from "src/components/logo";
+import NextLink from "next/link";
+import PropTypes from "prop-types";
 import { Scrollbar } from "src/components/scrollbar";
-import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
+import { items } from "./config";
+import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 
 export const SideNav = (props) => {
@@ -73,15 +74,12 @@ export const SideNav = (props) => {
           >
             <div>
               <Typography color="inherit" variant="subtitle1">
-                Devias
+                Dekla Parking
               </Typography>
-              <Typography color="neutral.400" variant="body2">
+              {/* <Typography color="neutral.400" variant="body2">
                 Production
-              </Typography>
+              </Typography> */}
             </div>
-            <SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>
-              <ChevronUpDownIcon />
-            </SvgIcon>
           </Box>
         </Box>
         <Divider sx={{ borderColor: "neutral.700" }} />

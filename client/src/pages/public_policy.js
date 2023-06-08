@@ -7,7 +7,6 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Head from "next/head";
 import publicPolicyAPI from "src/api/public_policy";
 
-
 const Page = () => {
   const [publicPolicies, setPublicPolicy] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -48,7 +47,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Public Policy | Dekla Parking</title>
+        <title>Public Policies | Dekla Parking</title>
       </Head>
       <Box
         component="main"
@@ -61,7 +60,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">publicPolicies</Typography>
+                <Typography variant="h4">Public Policies</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <DataGrid
                     rows={publicPolicies}

@@ -54,7 +54,7 @@ const Page = () => {
             spacing={2}
             sx={{ marginBottom: "20px", height: "100%" }}
           >
-            <Typography variant="h4">Labels</Typography>
+            <Typography variant="h4">User Labels</Typography>
 
             <Container
               sx={{

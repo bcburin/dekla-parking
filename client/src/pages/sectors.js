@@ -9,21 +9,21 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import BookLotModal from "src/components/lots/book-lot-modal";
 import CachedRoundedIcon from "@mui/icons-material/CachedRounded";
 import ConfirmationModal from "src/components/confirmation-modal";
+import CreateSectorModal from "src/components/sector/create-sector-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Head from "next/head";
 import ReassignLotModal from "src/components/lots/reassign-lot-modal";
 import SectorCard from "src/components/sector/sector-card";
 import ShowLotModal from "src/components/lots/show-lot-modal";
+import UnassignedLotsCard from "src/components/sector/unassigned-lots-card";
 import UpdateLotModal from "src/components/lots/update-lot-modal";
 import { actions } from "src/store/lot-ui-slice";
 import lotsAPI from "src/api/lots";
 import sectorAPI from "src/api/sectors";
-import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
-import CreateSectorModal from "src/components/sector/create-sector-modal";
-import UnassignedLotsCard from "src/components/sector/unassigned-lots-card";
 
 const Page = () => {
   const dispatch = useDispatch();

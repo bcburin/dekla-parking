@@ -120,7 +120,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Bookings</Typography>
+                <Typography variant="h4">Booking Requests</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <DataGrid
                     rows={bookings}

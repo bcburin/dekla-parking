@@ -53,7 +53,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Exclusive Policy | Dekla Parking</title>
+        <title>Exclusive Policies | Dekla Parking</title>
       </Head>
       <Box
         component="main"
@@ -66,7 +66,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Exclusive Policy</Typography>
+                <Typography variant="h4">Exclusive Policies</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <DataGrid
                     rows={exclusivePolicies}

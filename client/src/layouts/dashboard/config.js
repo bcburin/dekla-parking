@@ -1,14 +1,18 @@
 import BookmarksRoundedIcon from "@mui/icons-material/BookmarksRounded";
+import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 import CogIcon from "@heroicons/react/24/solid/CogIcon";
 import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFilledRounded";
+import LabelIcon from "@mui/icons-material/Label";
+import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
 import LockClosedIcon from "@heroicons/react/24/solid/LockClosedIcon";
+import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 import { SvgIcon } from "@mui/material";
 import UserIcon from "@heroicons/react/24/solid/UserIcon";
 import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+import VpnLockRoundedIcon from "@mui/icons-material/VpnLockRounded";
 import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
-import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
-import LabelIcon from "@mui/icons-material/Label";
 
 export const items = [
   {
@@ -64,47 +68,47 @@ export const items = [
       </SvgIcon>
     ),
     showInSideNav: true,
-    showOnlyToAdmins: true,
+    showOnlyToAdmins: false,
   },
   {
     title: "Labelings",
     path: "/labelings",
     icon: (
       <SvgIcon fontSize="small">
-        <BookmarksRoundedIcon />
+        <LocalOfferRoundedIcon />
       </SvgIcon>
     ),
     showInSideNav: true,
     showOnlyToAdmins: true,
   },
   {
-    title: "EpPermission",
+    title: "Permissions",
     path: "/ep_permission",
     icon: (
       <SvgIcon fontSize="small">
-        <BookmarksRoundedIcon />
+        <SecurityRoundedIcon />
       </SvgIcon>
     ),
     showInSideNav: true,
     showOnlyToAdmins: true,
   },
   {
-    title: "PublicPolicies",
+    title: "Public Policies",
     path: "/public_policy",
     icon: (
       <SvgIcon fontSize="small">
-        <BookmarksRoundedIcon />
+        <PublicRoundedIcon />
       </SvgIcon>
     ),
     showInSideNav: true,
     showOnlyToAdmins: true,
   },
   {
-    title: "ExclusivePolicies",
+    title: "Exclusive Policies",
     path: "/exclusive_policy",
     icon: (
       <SvgIcon fontSize="small">
-        <BookmarksRoundedIcon />
+        <VpnLockRoundedIcon />
       </SvgIcon>
     ),
     showInSideNav: true,
@@ -116,17 +120,6 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <UserIcon />
-      </SvgIcon>
-    ),
-    showInSideNav: true,
-    showOnlyToAdmins: false,
-  },
-  {
-    title: "Settings",
-    path: "/settings",
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
       </SvgIcon>
     ),
     showInSideNav: true,

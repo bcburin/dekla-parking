@@ -81,19 +81,19 @@ const Page = () => {
       valueGetter: ({ value }) => value && new Date(value),
     },
     {
-      field: "userId",
-      headerName: "User ID",
+      field: "user",
+      headerName: "User",
       width: 90,
       valueGetter: (params) => {
-        return `${params.row.labeledUser.id}`;
+        return `${params.row.labeledUser.username}`;
       },
     },
     {
-      field: "labelId",
-      headerName: "Label ID",
+      field: "label",
+      headerName: "Label",
       width: 90,
       valueGetter: (params) => {
-        return `${params.row.labelingLabel.id}`;
+        return `${params.row.labelingLabel.name}`;
       },
     },
     {
@@ -115,7 +115,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Labeling | Dekla Parking</title>
+        <title>User Labelings| Dekla Parking</title>
       </Head>
       <Box
         component="main"
@@ -128,7 +128,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Labelings</Typography>
+                <Typography variant="h4">User Labelings</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <DataGrid
                     rows={labelings}
