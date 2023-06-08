@@ -17,7 +17,9 @@ class IntervalSchema(APIModel):
 
     @validator('end_time')
     def end_time_greater_than_start_time(cls, end_time, values):
-        if 'start_time' in values and end_time <= values['start_time']:
+        if end_time is None:
+            return end_time
+        if 'start_time' in values and values['start_time'] is not None and end_time <= values['start_time']:
             raise ValueError("End time must be greater than the start time")
         return end_time
 
