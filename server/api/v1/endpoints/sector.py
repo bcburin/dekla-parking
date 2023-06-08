@@ -3,15 +3,11 @@ from fastapi_restful.cbv import cbv
 from sqlalchemy.orm import Session
 
 from server.api.v1.endpoints.base import register_db_routes, RouteType
-from server.common.models.ep_permission import EpPermissionModel
 from server.common.schemas.sector import SectorOutSchema, SectorCreateSchema, SectorUpdateSchema
 from server.database.config import get_db
 from server.services.auth import AuthReq, CurrentUser
-from server.services.label import LabelService
-from server.services.public_policy import PublicPolicyService
 from server.services.sector import SectorService
 from server.common.models.sector import SectorModel
-from server.services.user import UserService
 
 router = APIRouter(prefix='/sectors', tags=['sectors'])
 
@@ -42,16 +38,19 @@ class SectorAPI:
     ):
         if current_user.is_admin:
             return SectorService(self.db).get_all(skip=skip, limit=limit)
-        # Find exclusive sectors the current user has access to
-        active_user_labels = UserService(self.db).get_active_user_labels(user_id=current_user.id)
-        active_user_ep_permissions: set[EpPermissionModel] = set()
-        for label in active_user_labels:
-            active_label_ep_permissions = LabelService(self.db).get_active_ep_permissions(label_id=label.id)
-            active_user_ep_permissions |= active_label_ep_permissions
-        ep_ids = set([ep_permission.fk_ep_id for ep_permission in active_user_ep_permissions])
-        exclusive_sectors = set(SectorService(self.db).get_all(filters={'fk_ep_id': ep_ids}))
-        # Find public sectors
-        pp_ids = set([ppolicy.id for ppolicy in PublicPolicyService(self.db).get_all()])
-        public_sectors = set(SectorService(self.db).get_all(filters={'fk_pp_id': pp_ids}))
-        return list(public_sectors | exclusive_sectors)
+        return SectorService(self.db).get_sectors_user_has_permission(user=current_user)
 
+    @router.put(
+        '/{sector_id}/assign-public-policy/{policy_id}',
+        response_model=SectorOutSchema,
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
+    def assign_public_policy_to_sector(self, sector_id: int, policy_id: int):
+        return SectorService(self.db).assign_policy_to_sector(
+            sector_id=sector_id, policy_id=policy_id, exclusive=False)
+
+    @router.put(
+        '/{sector_id}/assign-exclusive-policy/{policy_id}',
+        response_model=SectorOutSchema,
+        dependencies=[Depends(AuthReq.current_user_has_permission)])
+    def assign_exclusive_policy_to_sector(self, sector_id: int, policy_id: int):
+        return SectorService(self.db).assign_policy_to_sector(sector_id=sector_id, policy_id=policy_id, exclusive=True)
