@@ -31,7 +31,7 @@ const Page = () => {
   const [createSectorModalIsOpen, setCreateSectorModalIsOpen] = useState(false);
   const lotUIState = useSelector((store) => store.lotUI);
   const loggedUserIsAdmin = useSelector(
-    (store) => store.auth.loggedUser.isAdmin
+    (store) => store.auth.loggedUser?.isAdmin || false
   );
 
   const getSectorsHandler = async () => {

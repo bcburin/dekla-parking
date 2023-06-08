@@ -27,7 +27,7 @@ export const SideNav = (props) => {
   const loggedUser = useSelector((store) => store.auth.loggedUser);
 
   const userHasAccessToPage = (item) =>
-    !item.showOnlyToAdmins || loggedUser.isAdmin;
+    !item.showOnlyToAdmins || loggedUser?.isAdmin;
 
   const content = (
     <Scrollbar
@@ -145,22 +145,24 @@ export const SideNav = (props) => {
   }
 
   return (
-    <Drawer
-      anchor="left"
-      onClose={onClose}
-      open={open}
-      PaperProps={{
-        sx: {
-          backgroundColor: "neutral.800",
-          color: "common.white",
-          width: 280,
-        },
-      }}
-      sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
-      variant="temporary"
-    >
-      {content}
-    </Drawer>
+    loggedUser && (
+      <Drawer
+        anchor="left"
+        onClose={onClose}
+        open={open}
+        PaperProps={{
+          sx: {
+            backgroundColor: "neutral.800",
+            color: "common.white",
+            width: 280,
+          },
+        }}
+        sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
+        variant="temporary"
+      >
+        {content}
+      </Drawer>
+    )
   );
 };
 

@@ -1,6 +1,7 @@
+import { signIn, signOut } from "./auth-slice";
+
 import axios from "axios";
 import { baseRootUrl } from "src/api/api";
-import { signIn } from "./auth-slice";
 
 export const login = (email, password) => {
   return async (dispatch) => {
@@ -38,5 +39,12 @@ export const login = (email, password) => {
     } catch (error) {
       throw new Error("Invalid email or password");
     }
+  };
+};
+
+export const logout = () => {
+  return async (dispatch) => {
+    localStorage.clear();
+    dispatch(signOut());
   };
 };
