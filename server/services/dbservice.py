@@ -40,7 +40,7 @@ class BaseDbService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         created_obj = self.db_manager.create(obj=obj)
         return created_obj
 
-    def update(self, id: Any, obj: UpdateSchemaType | BaseUpdateSchema) -> ModelType:
+    def update(self, id: Any, obj: UpdateSchemaType | BaseUpdateSchema | dict[str, Any]) -> ModelType:
         db_obj = self.db_manager.get_by_id(id)
         if not db_obj:
             raise NotFoundDbException(origin=self.db_manager.model.__tablename__)
