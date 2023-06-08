@@ -9,6 +9,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+
 import { useSelector } from "react-redux";
 
 export const AccountProfile = () => {
@@ -38,6 +39,9 @@ export const AccountProfile = () => {
           </Avatar>
           <Typography gutterBottom variant="h5">
             {`${loggedUser.firstName} ${loggedUser.lastName}`}
+          </Typography>
+          <Typography gutterBottom variant="body2">
+            {`${loggedUser.email}`}
           </Typography>
         </Box>
       </CardContent>

@@ -1,16 +1,21 @@
-import Head from "next/head";
 import {
   Box,
   Container,
+  Unstable_Grid2 as Grid,
   Stack,
   Typography,
-  Unstable_Grid2 as Grid,
 } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+
 import { AccountProfile } from "src/sections/account/account-profile";
 import { AccountProfileDetails } from "src/sections/account/account-profile-details";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import Head from "next/head";
+import UpdateUserForm from "src/components/user/update-user-form";
+import { useSelector } from "react-redux";
 
 const Page = () => {
+  const loggedUser = useSelector((store) => store.auth.loggedUser);
+
   return (
     <>
       <Head>
@@ -34,7 +39,7 @@ const Page = () => {
                   <AccountProfile />
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <AccountProfileDetails />
+                  <UpdateUserForm user={loggedUser} />
                 </Grid>
               </Grid>
             </div>

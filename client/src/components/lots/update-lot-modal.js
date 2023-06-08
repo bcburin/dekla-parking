@@ -20,12 +20,10 @@ const UpdateLotModal = ({ onUpdate }) => {
     (store) => store.lotUI.editLotModalIsOpen
   );
   const lot = useSelector((store) => store.lotUI.selectedLot);
-  console.log(lot);
   const [name, setName] = useState(lot?.name);
   const [location, setLocation] = useState(lot?.location);
   const [description, setDescription] = useState(lot?.description);
   const [available, setAvailable] = useState(lot?.available);
-  console.log(name, location, description, available);
 
   const handleNameChange = (event) => {
     setName(event.target.value);

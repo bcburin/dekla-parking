@@ -1,25 +1,60 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import ActionsToolbar from "src/components/actions-toolbar";
+import ConfirmationModal from "src/components/confirmation-modal";
+import CreatePolicyModal from "src/components/policy/create-policy-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Head from "next/head";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
+import ShowPolicyModal from "src/components/policy/show-policy-modal";
+import UpdatePolicyModal from "src/components/policy/update-policy-modal";
 import exclusivePolicyAPI from "src/api/exclusive_policy";
 
 const Page = () => {
   const [exclusivePolicies, setExclusivePolicies] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [updateModalState, setUpdateModalState] = useState({
+    isOpen: false,
+    policy: null,
+  });
   const [deleteModalState, setDeleteModalState] = useState({
     isOpen: false,
-    exclusivePolicy: null,
+    policy: null,
   });
-  const [deleteManyModelIsOpen, setDeleteManyModalIsOpen] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [showModalState, setShowModalState] = useState({
+    isOpen: false,
+    policy: null,
+  });
+  const [deleteManyModalIsOpen, setDeleteManyModalIsOpen] = useState(false);
+  const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
 
   const getExclusivePoliciesHandler = async () => {
     try {
       const exclusivePolicy = await exclusivePolicyAPI.getEntities();
       setExclusivePolicies(exclusivePolicy);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deletePolicyHandler = (policyId) => async () => {
+    try {
+      setDeleteModalState({ isOpen: false, policy: null });
+      await exclusivePolicyAPI.deleteEntity(policyId);
+      getPublicPolicyHandler();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deleteManyPoliciesHandler = async () => {
+    try {
+      await exclusivePolicyAPI.deleteManyEntities(selectedRows);
+      getPublicPolicyHandler();
     } catch (e) {
       console.log(e);
     }
@@ -32,7 +67,6 @@ const Page = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "name", headerName: "Name", width: 150 },
-    { field: "descriptor", headerName: "Descriptor", width: 150 },
     { field: "price", headerName: "Price", width: 150 },
     {
       field: "createdAt",
@@ -47,6 +81,36 @@ const Page = () => {
       width: 200,
       type: "dateTime",
       valueGetter: ({ value }) => value && new Date(value),
+    },
+    {
+      field: "actions",
+      type: "actions",
+      width: 100,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() =>
+            setDeleteModalState({ policy: params.row, isOpen: true })
+          }
+        />,
+        <GridActionsCellItem
+          icon={<InfoRoundedIcon />}
+          label="Information"
+          onClick={() =>
+            setShowModalState({ policy: params.row, isOpen: true })
+          }
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EditRoundedIcon />}
+          label="Edit"
+          onClick={() =>
+            setUpdateModalState({ policy: params.row, isOpen: true })
+          }
+          showInMenu
+        />,
+      ],
     },
   ];
 
@@ -74,6 +138,9 @@ const Page = () => {
                     components={{ Toolbar: ActionsToolbar }}
                     componentsProps={{
                       toolbar: {
+                        onRefreshClick: getExclusivePoliciesHandler,
+                        onCreateClick: () => setCreateModalIsOpen(true),
+                        onDeleteClick: () => setDeleteManyModalIsOpen(true),
                         deleteIsDisabled: selectedRows.length == 0,
                       },
                     }}
@@ -87,6 +154,54 @@ const Page = () => {
           </Stack>
         </Container>
       </Box>
+
+      <ConfirmationModal
+        open={deleteManyModalIsOpen}
+        onClose={() => setDeleteManyModalIsOpen(false)}
+        onConfirm={deleteManyPoliciesHandler}
+        title="Delete Exclusive Policies"
+        content="Are you sure you want to delete these exclusive policies?"
+      />
+
+      <ConfirmationModal
+        open={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, policy: null })}
+        onConfirm={deletePolicyHandler(deleteModalState.policy?.id)}
+        title="Delete Exclusive Policy"
+        content="Are you sure you want to delete this exclusive policy?"
+      />
+
+      <CreatePolicyModal
+        open={createModalIsOpen}
+        onClose={() => setCreateModalIsOpen(false)}
+        onConfirm={() => {
+          setCreateModalIsOpen(false);
+          getExclusivePoliciesHandler();
+        }}
+        api={exclusivePolicyAPI}
+      />
+
+      <UpdatePolicyModal
+        open={updateModalState.isOpen}
+        onClose={() => setUpdateModalState({ isOpen: false, policy: null })}
+        onConfirm={() => {
+          setUpdateModalState({ isOpen: false, policy: null });
+          getExclusivePoliciesHandler();
+        }}
+        policyData={updateModalState.policy}
+        api={exclusivePolicyAPI}
+      />
+
+      <ShowPolicyModal
+        open={showModalState.isOpen}
+        onClose={() =>
+          setShowModalState({
+            isOpen: false,
+            policy: null,
+          })
+        }
+        policy={showModalState.policy}
+      />
     </>
   );
 };

@@ -22,7 +22,6 @@ const ReassignLotModal = ({ sectors, onReassign }) => {
   const selectedLot = useSelector((state) => state.lotUI.selectedLot);
 
   const handleSectorChange = (event, value) => {
-    console.log(value);
     setSelectedSector(value);
   };
 

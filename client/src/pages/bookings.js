@@ -63,10 +63,10 @@ const Page = () => {
     },
     {
       field: "userId",
-      headerName: "User ID",
+      headerName: "User",
       width: 90,
       valueGetter: (params) => {
-        return `${params.row.bookingUser.id}`;
+        return `${params.row.bookingUser.username}`;
       },
     },
     {
