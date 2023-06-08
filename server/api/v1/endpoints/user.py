@@ -28,10 +28,7 @@ register_db_routes(
     create_schema=UserCreateSchema,
     update_schema=UserUpdateSchema,
     out_schema=UserOutSchema,
-    omit=[RouteType.get_by_id, RouteType.update, RouteType.delete],
-    auth={
-        RouteType.create: AuthReq.no_auth_restrictions,
-    }
+    omit=[RouteType.get_by_id, RouteType.update, RouteType.delete, RouteType.create]
 )
 
 
@@ -50,10 +47,16 @@ class UserAPI:
         response_model=UserOutSchema,
         dependencies=[Depends(AuthReq.current_user_is_authenticated)]
     )
-    def get_user_by_id(self, id: int, current_user: CurrentUser, db: Session = Depends(get_db)):
+    def get_user_by_id(self, id: int, current_user: CurrentUser):
         if id != current_user.id and not current_user.is_admin:
             raise AuthException('Not Authenticated')
-        return UserService(db=db).get_by_id(id=id)
+        return UserService(self.db).get_by_id(id=id)
+
+    @router.post('/', response_model=UserOutSchema, dependencies=[Depends(AuthReq.no_auth_restrictions)])
+    def create_user(self, current_user: CurrentUser, user: UserCreateSchema):
+        if user.is_admin and (not current_user or not current_user.is_admin):
+            raise AuthException('Not enough permissions')
+        return UserService(self.db).create(obj=user)
 
     @router.put(
         '/{id}',
