@@ -15,8 +15,8 @@ class BookingModel(BaseModel, IntervalModel):
 
     # Fields
     id: Mapped[int] = mapped_column(primary_key=True)
-    fk_user_id: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='SET NULL', onupdate='SET NULL'))
-    fk_lot_id: Mapped[int] = mapped_column(ForeignKey('lot.id', ondelete='SET NULL', onupdate='SET NULL'))
+    fk_user_id: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    fk_lot_id: Mapped[int] = mapped_column(ForeignKey('lot.id', ondelete='CASCADE', onupdate='CASCADE'))
     status: Mapped[str] = mapped_column()
 
     # Relationships
