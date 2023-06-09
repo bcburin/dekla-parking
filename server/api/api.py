@@ -21,7 +21,7 @@ async def root():
     return RedirectResponse(url='/docs')
 
 
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:3000", "http://0.0.0.0:3000"]
 
 api.add_middleware(
     CORSMiddleware,
