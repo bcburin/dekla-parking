@@ -38,7 +38,7 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         await dispatch(login(values.email, values.password));
-        await router.push("/");
+        await router.push("/sectors");
       } catch (err) {
         console.log(err);
         helpers.setStatus({ success: false });
