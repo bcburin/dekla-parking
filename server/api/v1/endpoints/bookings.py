@@ -47,7 +47,7 @@ class BookingAPI:
         return BookingService(self.db).update(id=booking_id, obj=updates)
 
     @router.put('/{booking_id}/reject', response_model=BookingOutSchema)
-    def approve_booking(self, booking_id: int):
+    def reject_booking(self, booking_id: int):
         updates = BookingUpdateSchema(status=BookingStatusType.Rejected)
         return BookingService(self.db).update(id=booking_id, obj=updates)
 
