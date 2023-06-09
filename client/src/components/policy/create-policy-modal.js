@@ -72,7 +72,7 @@ const CreatePolicyModal = ({ open, onClose, onConfirm, api }) => {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               type="number"
-              value={formik.values.priority}
+              value={formik.values.price}
             />
           </Stack>
           {formik.errors.submit && (

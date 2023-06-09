@@ -9,18 +9,19 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import React, { useState } from "react";
 
-import PolicyRoundedIcon from "@mui/icons-material/PolicyRounded";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
+import ConfirmationModal from "../confirmation-modal";
+import CreateLotModal from "../lots/create-lot-modal";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import EditSectorModal from "./edit-sector-modal";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import LotCard from "../lots/lot-card";
-import React, { useState } from "react";
-import CreateLotModal from "../lots/create-lot-modal";
+import PolicyRoundedIcon from "@mui/icons-material/PolicyRounded";
 import ShowSectorModal from "./show-sector-modal";
 import sectorAPI from "src/api/sectors";
-import ConfirmationModal from "../confirmation-modal";
 
 const SectorCard = ({ sector, refreshSectors }) => {
   const theme = useTheme();
@@ -28,6 +29,7 @@ const SectorCard = ({ sector, refreshSectors }) => {
   const [createLotModalIsOpen, setCreateLotModalIsOpen] = useState(false);
   const [showSectorModalIsOpen, setShowSectorModalIsOpen] = useState(false);
   const [deleteSectorModalIsOpen, setDeleteSectorModalIsOpen] = useState(false);
+  const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
 
   const deleteSectorHandler = async () => {
     try {
@@ -99,6 +101,7 @@ const SectorCard = ({ sector, refreshSectors }) => {
                 }
                 variant="contained"
                 color="primary"
+                onClick={() => setUpdateModalIsOpen(true)}
               >
                 Edit
               </Button>
@@ -117,7 +120,7 @@ const SectorCard = ({ sector, refreshSectors }) => {
                 View
               </Button>
             )}
-            {sector && (
+            {/* {sector && (
               <Button
                 startIcon={
                   <SvgIcon fontSize="small">
@@ -129,7 +132,7 @@ const SectorCard = ({ sector, refreshSectors }) => {
               >
                 Assign Policy
               </Button>
-            )}
+            )} */}
           </Box>
         </Box>
         <Grid container spacing={2}>
@@ -163,6 +166,15 @@ const SectorCard = ({ sector, refreshSectors }) => {
         onConfirm={deleteSectorHandler}
         title="Delete Sector"
         content={`Are you sure you want to delete this sector?`}
+      />
+      <EditSectorModal
+        open={updateModalIsOpen}
+        onClose={() => setUpdateModalIsOpen(false)}
+        onConfirm={() => {
+          setUpdateModalIsOpen(false);
+          refreshSectors();
+        }}
+        sector={sector}
       />
     </>
   );

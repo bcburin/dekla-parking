@@ -33,6 +33,7 @@ const Page = () => {
   const loggedUserIsAdmin = useSelector(
     (store) => store.auth.loggedUser?.isAdmin || false
   );
+  const [unassignedLots, setUnassignedLots] = useState([]);
 
   const getSectorsHandler = async () => {
     try {
@@ -43,15 +44,33 @@ const Page = () => {
     }
   };
 
-  const deleteLotHandler = async () => {
+  const getUnassignedLotsHandler = async () => {
     try {
-      dispatch(actions.closeDeleteLotModal());
-      await lotsAPI.deleteEntity(lotUIState.selectedLot.id);
-      await getSectorsHandler();
+      const lots = await lotsAPI.getUnassignedLots();
+      setUnassignedLots(lots);
     } catch (e) {
       console.log(e);
     }
   };
+
+  const updateAll = async () => {
+    await getSectorsHandler();
+    await getUnassignedLotsHandler();
+  };
+
+  const deleteLotHandler = async () => {
+    try {
+      dispatch(actions.closeDeleteLotModal());
+      await lotsAPI.deleteEntity(lotUIState.selectedLot.id);
+      await updateAll();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getUnassignedLotsHandler();
+  }, []);
 
   useEffect(() => {
     getSectorsHandler();
@@ -90,7 +109,7 @@ const Page = () => {
                     </SvgIcon>
                   }
                   variant="contained"
-                  onClick={getSectorsHandler}
+                  onClick={updateAll}
                 >
                   Refresh
                 </Button>
@@ -112,12 +131,18 @@ const Page = () => {
               alignItems="center"
               sx={{ flexGrow: 1, width: "100%" }}
             >
-              {loggedUserIsAdmin && <UnassignedLotsCard key={-1} />}
+              {loggedUserIsAdmin && (
+                <UnassignedLotsCard
+                  key={-1}
+                  unassignedLots={unassignedLots}
+                  onUpdate={getUnassignedLotsHandler}
+                />
+              )}
               {sectors.map((sector) => (
                 <SectorCard
                   key={sector.id}
                   sector={sector}
-                  refreshSectors={getSectorsHandler}
+                  refreshSectors={updateAll}
                 />
               ))}
             </Stack>
@@ -126,8 +151,8 @@ const Page = () => {
       </Box>
       <ShowLotModal />
       <BookLotModal />
-      <ReassignLotModal sectors={sectors} onReassign={getSectorsHandler} />
-      <UpdateLotModal onUpdate={getSectorsHandler} />
+      <ReassignLotModal sectors={sectors} onReassign={updateAll} />
+      <UpdateLotModal onUpdate={updateAll} />
       <ConfirmationModal
         open={lotUIState.deleteLotModalIsOpen}
         onClose={() => dispatch(actions.closeDeleteLotModal())}
@@ -139,7 +164,7 @@ const Page = () => {
         open={createSectorModalIsOpen}
         onClose={() => setCreateSectorModalIsOpen(false)}
         onConfirm={() => setCreateSectorModalIsOpen(false)}
-        onRefresh={getSectorsHandler}
+        onRefresh={updateAll}
       />
     </>
   );

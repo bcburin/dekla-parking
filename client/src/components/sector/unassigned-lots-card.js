@@ -7,31 +7,16 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import React, { useState } from "react";
 
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
-import LotCard from "../lots/lot-card";
-import React, { useEffect, useState } from "react";
 import CreateLotModal from "../lots/create-lot-modal";
-import lotsAPI from "src/api/lots";
+import LotCard from "../lots/lot-card";
 
-const UnassignedLotsCard = () => {
+const UnassignedLotsCard = ({ unassignedLots, onUpdate }) => {
   const theme = useTheme();
 
   const [createLotModalIsOpen, setCreateLotModalIsOpen] = useState(false);
-  const [unassignedLots, setUnassignedLots] = useState([]);
-
-  const getUnassignedLotsHandler = async () => {
-    try {
-      const lots = await lotsAPI.getUnassignedLots();
-      setUnassignedLots(lots);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    getUnassignedLotsHandler();
-  }, []);
 
   return (
     <>
@@ -88,7 +73,7 @@ const UnassignedLotsCard = () => {
         onConfirm={async () => {
           setCreateLotModalIsOpen(false);
         }}
-        onRefresh={getUnassignedLotsHandler}
+        onRefresh={onUpdate}
       />
     </>
   );

@@ -3,6 +3,8 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
 import ActionsToolbar from "src/components/actions-toolbar";
+import ArrowCircleRightRoundedIcon from "@mui/icons-material/ArrowCircleRightRounded";
+import AssignPolicyModal from "src/components/policy/assign-to-sector";
 import ConfirmationModal from "src/components/confirmation-modal";
 import CreatePolicyModal from "src/components/policy/create-policy-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
@@ -13,6 +15,7 @@ import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import ShowPolicyModal from "src/components/policy/show-policy-modal";
 import UpdatePolicyModal from "src/components/policy/update-policy-modal";
 import exclusivePolicyAPI from "src/api/exclusive_policy";
+import sectorAPI from "src/api/sectors";
 
 const Page = () => {
   const [exclusivePolicies, setExclusivePolicies] = useState([]);
@@ -26,6 +29,10 @@ const Page = () => {
     policy: null,
   });
   const [showModalState, setShowModalState] = useState({
+    isOpen: false,
+    policy: null,
+  });
+  const [assignModalState, setAssignModalState] = useState({
     isOpen: false,
     policy: null,
   });
@@ -107,6 +114,14 @@ const Page = () => {
           label="Edit"
           onClick={() =>
             setUpdateModalState({ policy: params.row, isOpen: true })
+          }
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<ArrowCircleRightRoundedIcon />}
+          label="Assign to Sector"
+          onClick={() =>
+            setAssignModalState({ policy: params.row, isOpen: true })
           }
           showInMenu
         />,
@@ -201,6 +216,24 @@ const Page = () => {
           })
         }
         policy={showModalState.policy}
+      />
+
+      <AssignPolicyModal
+        open={assignModalState.isOpen}
+        onClose={() =>
+          setAssignModalState({
+            isOpen: false,
+            policy: null,
+          })
+        }
+        onConfirm={() =>
+          setAssignModalState({
+            isOpen: false,
+            policy: null,
+          })
+        }
+        policy={assignModalState.policy}
+        assignFn={sectorAPI.assignExclusivePolicy}
       />
     </>
   );

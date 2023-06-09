@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import ActionsToolbar from "src/components/actions-toolbar";
 import ConfirmationModal from "src/components/confirmation-modal";
+import CreatePermissionModal from "src/components/policy/create-permission-modal";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Head from "next/head";
@@ -16,6 +17,7 @@ const Page = () => {
     epPermission: null,
   });
   const [deleteManyModelIsOpen, setDeleteManyModalIsOpen] = useState(false);
+  const [createModalIsOPen, setCreateModalIsOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
   const getEpPermissionsHandler = async () => {
@@ -138,6 +140,7 @@ const Page = () => {
                     components={{ Toolbar: ActionsToolbar }}
                     componentsProps={{
                       toolbar: {
+                        onCreateClick: () => setCreateModalIsOpen(true),
                         onRefreshClick: getEpPermissionsHandler,
                         onDeleteClick: () => setDeleteManyModalIsOpen(true),
                         deleteIsDisabled: selectedRows.length == 0,
@@ -170,6 +173,15 @@ const Page = () => {
           onConfirm={deleteManyEpPermissionHandler}
           title="Delete Ep permissions"
           content="Are you sure you want to delete these Ep permissions?"
+        />
+
+        <CreatePermissionModal
+          open={createModalIsOPen}
+          onClose={() => setCreateModalIsOpen(false)}
+          onConfirm={() => {
+            setCreateModalIsOpen(false);
+            getEpPermissionsHandler();
+          }}
         />
       </Box>
     </>

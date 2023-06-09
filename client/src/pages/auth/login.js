@@ -1,10 +1,5 @@
-import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
-import Head from "next/head";
-import NextLink from "next/link";
-import { useRouter } from "next/navigation";
-import { useFormik } from "formik";
 import * as Yup from "yup";
+
 import {
   Box,
   Button,
@@ -15,17 +10,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useCallback, useState } from "react";
+
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import Head from "next/head";
+import NextLink from "next/link";
 import { login } from "src/store/auth-actions";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [method, setMethod] = useState("email");
   const formik = useFormik({
+    // initialValues: {
+    //   email: "admin@example.com",
+    //   password: "123",
+    //   submit: null,
+    // },
     initialValues: {
-      email: "admin@example.com",
-      password: "123",
+      email: "",
+      password: "",
       submit: null,
     },
     validationSchema: Yup.object({
@@ -38,7 +45,7 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         await dispatch(login(values.email, values.password));
-        await router.push("/");
+        await router.push("/sectors");
       } catch (err) {
         console.log(err);
         helpers.setStatus({ success: false });
@@ -89,10 +96,6 @@ const Page = () => {
                 </Link>
               </Typography>
             </Stack>
-            <Tabs onChange={handleMethodChange} sx={{ mb: 3 }} value={method}>
-              <Tab label="Email" value="email" />
-              <Tab label="Phone Number" value="phoneNumber" />
-            </Tabs>
             {method === "email" && (
               <form noValidate onSubmit={formik.handleSubmit}>
                 <Stack spacing={3}>
